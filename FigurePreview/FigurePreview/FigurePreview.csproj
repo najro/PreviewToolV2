@@ -89,6 +89,25 @@
     <Content Include="FigurePreview.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Highcharts\scripts\9.3.1\accessibility.js" />
+    <Content Include="Highcharts\scripts\9.3.1\annotations-advanced.js" />
+    <Content Include="Highcharts\scripts\9.3.1\annotations.js" />
+    <Content Include="Highcharts\scripts\9.3.1\data.js" />
+    <Content Include="Highcharts\scripts\9.3.1\export-data.js" />
+    <Content Include="Highcharts\scripts\9.3.1\exporting.js" />
+    <Content Include="Highcharts\scripts\9.3.1\funnel.js" />
+    <Content Include="Highcharts\scripts\9.3.1\highcharts-more.js" />
+    <Content Include="Highcharts\scripts\9.3.1\highstock.js" />
+    <Content Include="Highcharts\scripts\9.3.1\series-label.js" />
+    <Content Include="Highcharts\scripts\9.3.1\solid-gauge.js" />
+    <Content Include="Sample\sample.css" />
+    <Content Include="Sample\sample.htm" />
+    <Content Include="Sample\sample.svg" />
+    <Content Include="Sample\ToolFileStructure.jpg" />
+    <Content Include="Sample\ToolSample.jpg" />
+    <Content Include="Template\start.htm" />
+    <Content Include="Template\view-template.htm" />
+    <Content Include="Template\view.css" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
