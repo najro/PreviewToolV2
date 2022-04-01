@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using FigurePreview.Configuration;
+using FigurePreview.Factories;
+using FigurePreview.Models;
 
 namespace FigurePreview
 {
@@ -19,6 +21,7 @@ namespace FigurePreview
         {
             InitializeComponent();
             VerifyConfiguration();
+            LoadDisplayItems();
         }
 
         private void VerifyConfiguration()
@@ -37,9 +40,31 @@ namespace FigurePreview
             }
         }
 
+        private void LoadDisplayItems()
+        {
+            var list = new DisplayItemFactory().GetDisplayItems();
+
+
+            listBoxDisplayItems.DisplayMember = "Name";
+
+            foreach (var displayItem in list)
+            {
+                listBoxDisplayItems.Items.Add(displayItem);
+            }
+        }
+
         private void PreviewToolForm_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void listBoxDisplayItems_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBoxDisplayItems.SelectedItem != null)
+            {
+                var displayItem = (DisplayItem)listBoxDisplayItems.SelectedItem;
+            }
+           
         }
     }
 }

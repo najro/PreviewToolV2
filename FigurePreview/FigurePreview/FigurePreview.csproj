@@ -50,6 +50,7 @@
     <Compile Include="Configuration\Figure.cs" />
     <Compile Include="Configuration\FigureConfiguration.cs" />
     <Compile Include="Configuration\FigurePreview.cs" />
+    <Compile Include="Factories\DisplayItemFactory.cs" />
     <Compile Include="FigurePreviewForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -57,6 +58,7 @@
       <DependentUpon>FigurePreviewForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper\HtmlHelper.cs" />
+    <Compile Include="Models\DisplayItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FigurePreviewForm.resx">

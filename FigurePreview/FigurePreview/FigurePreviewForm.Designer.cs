@@ -30,6 +30,7 @@ namespace FigurePreview
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
+            this.listBoxDisplayItems = new System.Windows.Forms.ListBox();
             this.SuspendLayout();
             // 
             // label1
@@ -41,11 +42,21 @@ namespace FigurePreview
             this.label1.TabIndex = 0;
             this.label1.Text = "Hent filer fra";
             // 
+            // listBoxDisplayItems
+            // 
+            this.listBoxDisplayItems.FormattingEnabled = true;
+            this.listBoxDisplayItems.Location = new System.Drawing.Point(32, 49);
+            this.listBoxDisplayItems.Name = "listBoxDisplayItems";
+            this.listBoxDisplayItems.Size = new System.Drawing.Size(120, 433);
+            this.listBoxDisplayItems.TabIndex = 1;
+            this.listBoxDisplayItems.SelectedIndexChanged += new System.EventHandler(this.listBoxDisplayItems_SelectedIndexChanged);
+            // 
             // PreviewToolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(966, 589);
+            this.Controls.Add(this.listBoxDisplayItems);
             this.Controls.Add(this.label1);
             this.Name = "PreviewToolForm";
             this.Text = "Form1";
@@ -58,6 +69,7 @@ namespace FigurePreview
         #endregion
 
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ListBox listBoxDisplayItems;
     }
 }
 
