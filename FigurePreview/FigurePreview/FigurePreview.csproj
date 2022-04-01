@@ -51,13 +51,13 @@
     <Compile Include="Configuration\FigureConfiguration.cs" />
     <Compile Include="Configuration\FigurePreview.cs" />
     <Compile Include="Factories\DisplayItemFactory.cs" />
+    <Compile Include="Factories\HtmlViewFactory.cs" />
     <Compile Include="FigurePreviewForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FigurePreviewForm.Designer.cs">
       <DependentUpon>FigurePreviewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helper\HtmlHelper.cs" />
     <Compile Include="Models\DisplayItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,25 +91,53 @@
     <Content Include="FigurePreview.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Highcharts\scripts\9.3.1\accessibility.js" />
-    <Content Include="Highcharts\scripts\9.3.1\annotations-advanced.js" />
-    <Content Include="Highcharts\scripts\9.3.1\annotations.js" />
-    <Content Include="Highcharts\scripts\9.3.1\data.js" />
-    <Content Include="Highcharts\scripts\9.3.1\export-data.js" />
-    <Content Include="Highcharts\scripts\9.3.1\exporting.js" />
-    <Content Include="Highcharts\scripts\9.3.1\funnel.js" />
-    <Content Include="Highcharts\scripts\9.3.1\highcharts-more.js" />
-    <Content Include="Highcharts\scripts\9.3.1\highstock.js" />
-    <Content Include="Highcharts\scripts\9.3.1\series-label.js" />
-    <Content Include="Highcharts\scripts\9.3.1\solid-gauge.js" />
-    <Content Include="Sample\sample.css" />
-    <Content Include="Sample\sample.htm" />
-    <Content Include="Sample\sample.svg" />
-    <Content Include="Sample\ToolFileStructure.jpg" />
-    <Content Include="Sample\ToolSample.jpg" />
-    <Content Include="Template\start.htm" />
-    <Content Include="Template\view-template.htm" />
-    <Content Include="Template\view.css" />
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\accessibility.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\annotations-advanced.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\annotations.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\data.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\export-data.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\exporting.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\funnel.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\highcharts-more.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\highstock.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\series-label.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Scripts\Highcharts\9.3.1\solid-gauge.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Sample\sample.css" />
+    <Content Include="HtmlView\Sample\sample.htm" />
+    <Content Include="HtmlView\Sample\sample.svg" />
+    <Content Include="HtmlView\Sample\ToolFileStructure.jpg" />
+    <Content Include="HtmlView\Sample\ToolSample.jpg" />
+    <Content Include="HtmlView\View\default.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Template\view-template.htm">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="HtmlView\Styles\view.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

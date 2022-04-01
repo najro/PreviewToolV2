@@ -17,11 +17,21 @@ namespace FigurePreview
 {
     public partial class PreviewToolForm : Form
     {
+        private DisplayItemFactory displayItemFactory;
+        private HtmlViewFactory htmlViewFactory;
+
         public PreviewToolForm()
         {
             InitializeComponent();
+            InitializeFactories();
             VerifyConfiguration();
             LoadDisplayItems();
+        }
+
+        private void InitializeFactories()
+        {
+            displayItemFactory = new DisplayItemFactory();
+            htmlViewFactory = new HtmlViewFactory();
         }
 
         private void VerifyConfiguration()
@@ -42,7 +52,7 @@ namespace FigurePreview
 
         private void LoadDisplayItems()
         {
-            var list = new DisplayItemFactory().GetDisplayItems();
+            var list = displayItemFactory.GetDisplayItems();
 
 
             listBoxDisplayItems.DisplayMember = "Name";
@@ -63,6 +73,7 @@ namespace FigurePreview
             if (listBoxDisplayItems.SelectedItem != null)
             {
                 var displayItem = (DisplayItem)listBoxDisplayItems.SelectedItem;
+                var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem.Name);
             }
            
         }
