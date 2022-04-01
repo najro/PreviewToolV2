@@ -2,6 +2,7 @@
 using FigurePreview.Models;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace FigurePreview.Factories
 {
@@ -57,8 +58,7 @@ namespace FigurePreview.Factories
             }
 
 
-
-            return displayItems;
+            return displayItems.OrderBy(o => o.Name).ToList();
         }
     }
 }
