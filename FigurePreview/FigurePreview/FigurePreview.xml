@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FigurePreview startpath="C:\Lager">
+<PathRoule>{startpath}{dynamicpath}{FormatPath}</PathRoule>
+	<Figure>
+		<Name>Kjerneformat statiske</Name>
+		<FormatPath>HTML\Grafikk</FormatPath>
+		<Extentions>
+			<Ext>svg</Ext>
+			<Ext>png</Ext>
+			<Ext>jpg</Ext>
+			<Ext>jpeg</Ext>
+			<Ext>gif</Ext>
+		</Extentions>
+	</Figure>
+	<Figure>
+		<Name>Kjerneformat Dynamisk</Name>
+		<FormatPath>DFIG</FormatPath>
+		<Extentions>
+			<Ext>json</Ext>
+		</Extentions>
+	</Figure>
+	<Figure>
+		<Name>EPUB</Name>
+		<FormatPath>EPUBgrafikk</FormatPath>
+		<Extentions>
+			<Ext>png</Ext>
+			<Ext>jpg</Ext>
+			<Ext>jpeg</Ext>
+			<Ext>gif</Ext>
+		</Extentions>
+	</Figure>
+	<Figure>
+		<Name>Trykk</Name>
+		<FormatPath>SGML\Grafikk</FormatPath>
+		<Extentions>
+			<Ext>svg</Ext>
+			<Ext>EPS</Ext>
+			<Ext>tif</Ext>
+		</Extentions>
+	</Figure>
+</FigurePreview>
