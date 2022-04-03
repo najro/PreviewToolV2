@@ -9,11 +9,13 @@ namespace FigurePreview.Models
 {
     public class FigureItem
     {
-        private List<FigureInfo> _figureInfo;
+        private List<FigureInfo> _figureInfoList;
 
-        public FigureItem()
+        public FigureItem(string name, FigureInfo figurInfo)
         {
-            _figureInfo = new List<FigureInfo>();
+            Name = name;
+            _figureInfoList = new List<FigureInfo>();
+            AddFigureInfo(figurInfo);
         }
 
         public string Name
@@ -25,7 +27,7 @@ namespace FigurePreview.Models
 
         public void AddFigureInfo(FigureInfo figure)
         {
-            _figureInfo.Add(figure);
+            _figureInfoList.Add(figure);
         }
 
 

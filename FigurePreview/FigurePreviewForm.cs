@@ -17,7 +17,7 @@ namespace FigurePreview
 {
     public partial class PreviewToolForm : Form
     {
-        private DisplayItemFactory displayItemFactory;
+        private FigureItemFactory displayItemFactory;
         private HtmlViewFactory htmlViewFactory;
 
         public PreviewToolForm()
@@ -30,7 +30,7 @@ namespace FigurePreview
 
         private void InitializeFactories()
         {
-            displayItemFactory = new DisplayItemFactory();
+            displayItemFactory = new FigureItemFactory();
             htmlViewFactory = new HtmlViewFactory();
         }
 
