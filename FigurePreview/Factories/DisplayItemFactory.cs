@@ -9,9 +9,9 @@ namespace FigurePreview.Factories
     public class DisplayItemFactory
     {
 
-        public List<DisplayItem> GetDisplayItems()
+        public List<FigureItem> GetDisplayItems()
         {
-            List<DisplayItem> displayItems = new List<DisplayItem>();
+            List<FigureItem> displayItems = new List<FigureItem>();
 
 
             // Check 4 areas based on configuration
@@ -30,6 +30,26 @@ namespace FigurePreview.Factories
                 foreach (var file in files)
                 {
 
+                    var fileName = Path.GetFileNameWithoutExtension(file);
+
+                    if (string.IsNullOrWhiteSpace(fileName))
+                        continue;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     var fileExtension = Path.GetExtension(file).ToLower().Replace(".","");
 
                     if (string.IsNullOrWhiteSpace(fileExtension))
@@ -39,16 +59,13 @@ namespace FigurePreview.Factories
                         continue;
 
 
-                    var fileName = Path.GetFileNameWithoutExtension(file);
-
-                    if (string.IsNullOrWhiteSpace(fileName))
-                        continue;
+                   
 
                     if (displayItems.Exists(x => x.Name == fileName))
                         continue;
 
 
-                    var item = new DisplayItem()
+                    var item = new FigureItem()
                     {
                         Name = fileName
                     };

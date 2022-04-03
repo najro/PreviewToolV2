@@ -58,7 +58,8 @@
     <Compile Include="FigurePreviewForm.Designer.cs">
       <DependentUpon>FigurePreviewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\DisplayItem.cs" />
+    <Compile Include="Models\FigureItem.cs" />
+    <Compile Include="Models\FigureInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FigurePreviewForm.resx">

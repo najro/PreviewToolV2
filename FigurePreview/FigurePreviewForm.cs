@@ -72,8 +72,8 @@ namespace FigurePreview
         {
             if (listBoxDisplayItems.SelectedItem != null)
             {
-                var displayItem = (DisplayItem)listBoxDisplayItems.SelectedItem;
-                var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem.Name);
+                var displayItem = (FigureItem)listBoxDisplayItems.SelectedItem;
+                var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem);
             }
            
         }

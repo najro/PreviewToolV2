@@ -1,6 +1,7 @@
 ﻿using FigurePreview.Configuration;
 using System.IO;
 using System.Text;
+using FigurePreview.Models;
 
 namespace FigurePreview.Factories
 {
@@ -8,16 +9,23 @@ namespace FigurePreview.Factories
     {
         private const string HtmlViewFolder = "HtmlView";
 
-        public string CreateHtmlViewForFile(string fileName)
+        public string CreateHtmlViewForFile(FigureItem displayItem)
         {
             var figures = FigureConfiguration.Instance.FigurePreview.Figure;
 
+            StringBuilder sb = new StringBuilder();
+
             foreach (var figure in figures)
             {
+                sb.Append($"<div>{figure.Name}</div>");
                 // build up content
+                foreach (var ext in figure.Extentions.Ext)
+                {
+                    
+                }
             }
 
-            var displayContent = "<div>Test</div>";
+            var displayContent = sb.ToString();
 
             // read template file and replace with content
             var templateFilePath = GetTemplateFilePath();
@@ -25,7 +33,7 @@ namespace FigurePreview.Factories
             //previewHtml = previewHtml.Replace("#chartJson#", !string.IsNullOrEmpty(jsonData) ? jsonData : "undefined");
 
             var viewHtml = templateHtml.Replace("{{DisplayItemInfo}}", displayContent);
-            var viewPath = GetViewFilePath(fileName);
+            var viewPath = GetViewFilePath(displayItem.Name);
             File.WriteAllText(viewPath, viewHtml, Encoding.UTF8);
 
           
