@@ -20,6 +20,7 @@ namespace FigurePreview
     {
         private FigureItemFactory displayItemFactory;
         private HtmlViewFactory htmlViewFactory;
+        private string selectedPath = "";
 
         public PreviewToolForm()
         {
@@ -103,6 +104,21 @@ namespace FigurePreview
                 webView2FigureView.Source = new Uri(viewPath);
             }
            
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog folderDlg = new FolderBrowserDialog();
+            folderDlg.ShowNewFolderButton = false;
+            folderDlg.SelectedPath = FigureConfiguration.Instance.FigurePreview.StartPath;
+            //folderDlg.RootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+            // Show the FolderBrowserDialog.  
+            DialogResult result = folderDlg.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                selectedPath = folderDlg.SelectedPath;
+                Environment.SpecialFolder root = folderDlg.RootFolder;
+            }
         }
     }
 }

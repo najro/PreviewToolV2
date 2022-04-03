@@ -64,37 +64,6 @@ namespace FigurePreview.Factories
 
 
 
-                    
-
-
-
-                   
-                      
-
-
-
-
-
-                        //var fileExtension = Path.GetExtension(file).ToLower().Replace(".","");
-
-
-
-                        //if (!figure.Extentions.Ext.Exists(x=> x.ToLower() == fileExtension))
-                        //    continue;
-
-
-
-
-                        //if (displayItems.Exists(x => x.Name == fileName))
-                        //    continue;
-
-
-                        //var item = new FigureItem()
-                        //{
-                        //    Name = fileName
-                        //};
-
-                        //displayItems.Add(item);
                 }
             }
 
