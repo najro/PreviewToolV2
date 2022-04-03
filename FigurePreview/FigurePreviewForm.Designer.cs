@@ -31,6 +31,8 @@ namespace FigurePreview
         {
             this.label1 = new System.Windows.Forms.Label();
             this.listBoxDisplayItems = new System.Windows.Forms.ListBox();
+            this.webView2FigureView = new Microsoft.Web.WebView2.WinForms.WebView2();
+            ((System.ComponentModel.ISupportInitialize)(this.webView2FigureView)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -51,16 +53,31 @@ namespace FigurePreview
             this.listBoxDisplayItems.TabIndex = 1;
             this.listBoxDisplayItems.SelectedIndexChanged += new System.EventHandler(this.listBoxDisplayItems_SelectedIndexChanged);
             // 
+            // webView2FigureView
+            // 
+            this.webView2FigureView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.webView2FigureView.CreationProperties = null;
+            this.webView2FigureView.DefaultBackgroundColor = System.Drawing.Color.White;
+            this.webView2FigureView.Location = new System.Drawing.Point(173, 49);
+            this.webView2FigureView.Name = "webView2FigureView";
+            this.webView2FigureView.Size = new System.Drawing.Size(722, 433);
+            this.webView2FigureView.TabIndex = 2;
+            this.webView2FigureView.ZoomFactor = 1D;
+            // 
             // PreviewToolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(966, 589);
+            this.Controls.Add(this.webView2FigureView);
             this.Controls.Add(this.listBoxDisplayItems);
             this.Controls.Add(this.label1);
             this.Name = "PreviewToolForm";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.PreviewToolForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.webView2FigureView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -70,6 +87,7 @@ namespace FigurePreview
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListBox listBoxDisplayItems;
+        private Microsoft.Web.WebView2.WinForms.WebView2 webView2FigureView;
     }
 }
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -63,9 +64,34 @@ namespace FigurePreview
             }
         }
 
-        private void PreviewToolForm_Load(object sender, EventArgs e)
+        private async void PreviewToolForm_Load(object sender, EventArgs e)
         {
+            webView2FigureView.CoreWebView2InitializationCompleted += WebView2FigureView_CoreWebView2InitializationCompleted;
 
+            Debug.WriteLine("before InitializeAsync");
+            await InitializeAsync();
+            Debug.WriteLine("after InitializeAsync");
+
+            if ((webView2FigureView == null) || (webView2FigureView.CoreWebView2 == null))
+            {
+                Debug.WriteLine("webview not ready");
+            }
+
+            webView2FigureView.Source = new Uri(Directory.GetCurrentDirectory() + $"\\htmlview\\view\\default.htm");
+
+        }
+
+        private async Task InitializeAsync()
+        {
+            Debug.WriteLine("InitializeAsync");
+            await webView2FigureView.EnsureCoreWebView2Async(null);
+            Debug.WriteLine("WebView2 Runtime version: " + webView2FigureView.CoreWebView2.Environment.BrowserVersionString);
+        }
+
+        private void WebView2FigureView_CoreWebView2InitializationCompleted(object sender, Microsoft.Web.WebView2.Core.CoreWebView2InitializationCompletedEventArgs e)
+
+        {
+            Debug.WriteLine("WebView_CoreWebView2InitializationCompleted");
         }
 
         private void listBoxDisplayItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -74,6 +100,7 @@ namespace FigurePreview
             {
                 var displayItem = (FigureItem)listBoxDisplayItems.SelectedItem;
                 var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem);
+                webView2FigureView.Source = new Uri(viewPath);
             }
            
         }
