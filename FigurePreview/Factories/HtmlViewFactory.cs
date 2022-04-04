@@ -40,14 +40,14 @@ namespace FigurePreview.Factories
 
                         var figureInfo = displayFigureItem.GetFigureInfoForExtension(figure, ext);
 
-                        htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
+                        htmlContent.Append($"<div class=\"ext-header\">{figureInfo.FileName}.{ext}</div>");
                         htmlContent.Append($"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
                     }
-                    else
-                    {
-                         htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
-                        htmlContent.Append($"<div class=\"ext-content\">Savnes</div>");
-                    }
+                    //else
+                    //{
+                    //     htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
+                    //     htmlContent.Append($"<div class=\"ext-content\">Savnes</div>");
+                    //}
 
                 }
 
@@ -60,15 +60,12 @@ namespace FigurePreview.Factories
 
             // read template file and replace with content
             var templateFilePath = GetTemplateFilePath();
-            var templateHtml = File.ReadAllText(templateFilePath, Encoding.UTF8);
-            //previewHtml = previewHtml.Replace("#chartJson#", !string.IsNullOrEmpty(jsonData) ? jsonData : "undefined");
-
-            var viewHtml = templateHtml.Replace("{{FiguresInfo}}", displayContent);
+            var viewHtml = File.ReadAllText(templateFilePath, Encoding.UTF8);
+            
+            viewHtml = viewHtml.Replace("{{FiguresContent}}", displayContent);
+            viewHtml = viewHtml.Replace("{{FiguresGridStyle}}", $".figures {{grid-template-columns : repeat({figures.Count}, 1fr);}}");
             var viewPath = GetViewFilePath(displayFigureItem.Name);
             File.WriteAllText(viewPath, viewHtml, Encoding.UTF8);
-
-          
-
 
             return viewPath;
         }

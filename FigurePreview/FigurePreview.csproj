@@ -140,8 +140,6 @@
     <Content Include="HtmlView\Sample\sample.css" />
     <Content Include="HtmlView\Sample\sample.htm" />
     <Content Include="HtmlView\Sample\sample.svg" />
-    <Content Include="HtmlView\Sample\ToolFileStructure.jpg" />
-    <Content Include="HtmlView\Sample\ToolSample.jpg" />
     <Content Include="HtmlView\View\default.htm">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

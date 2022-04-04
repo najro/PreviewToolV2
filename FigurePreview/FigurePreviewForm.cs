@@ -112,5 +112,10 @@ namespace FigurePreview
                 DisplayFigures();
             }
         }
+
+        private void buttonRefreshHtml_Click(object sender, EventArgs e)
+        {
+            webView2FigureView.Reload();
+        }
     }
 }

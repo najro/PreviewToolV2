@@ -3,7 +3,7 @@
 }
 
 html {
-    font-size: 22px;
+    font-size: 18px;
 }
 
 body {
@@ -11,6 +11,10 @@ body {
     margin: 0;
     background-color: #fff;
     font-family: "open-sans"
+}
+
+.introduction {
+    padding: 0.1em 0.5em 0 0.5em;
 }
 
 h2 {
@@ -67,7 +71,7 @@ h2 {
 }
 
 
-.figures { grid-template-columns: repeat(4, 1fr); }
+/*.figures { grid-template-columns: repeat(4, 1fr); }*/
 
 
 

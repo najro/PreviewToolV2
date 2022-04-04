@@ -3,53 +3,41 @@
         <link rel="stylesheet" href="..\Styles\view.css">
     </head>
 <body>
+    <style>{{FiguresGridStyle}}</style>
+    {{FiguresContent}}
 
-{{FiguresInfo}}
-
-
-<script>
-
-
-    // same set options as on regjeringen.no
-    var setOptions = {
-        lang: {
-            numericSymbols: null,
-            decimalPoint: ",",
-            thousandsSep: '\u0020',
-            months: ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'],
-            shortMonths: ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'],
-            weekdays: ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'],
-            shortWeekdays: ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'],
-        },
-        xAxis: {
-            dateTimeLabelFormats: {
-                day: '%e. %b',
-                week: '%e. %b',
-                month: '%b %y',
-                year: '%Y'
+    <script>
+        // same set options as on regjeringen.no
+        var setOptions = {
+            lang: {
+                numericSymbols: null,
+                decimalPoint: ",",
+                thousandsSep: '\u0020',
+                months: ['januar', 'februar', 'mars', 'april', 'mai', 'juni', 'juli', 'august', 'september', 'oktober', 'november', 'desember'],
+                shortMonths: ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des'],
+                weekdays: ['søndag', 'mandag', 'tirsdag', 'onsdag', 'torsdag', 'fredag', 'lørdag'],
+                shortWeekdays: ['søn', 'man', 'tir', 'ons', 'tor', 'fre', 'lør'],
+            },
+            xAxis: {
+                dateTimeLabelFormats: {
+                    day: '%e. %b',
+                    week: '%e. %b',
+                    month: '%b %y',
+                    year: '%Y'
+                }
             }
-        }
-    };
-
-    // set options and load highcharts
-    document.addEventListener('DOMContentLoaded',
-        function() {
-            //Highcharts.setOptions(setOptions);
-            //Highcharts.chart('chartData', chartJson);
-            //Highcharts.chart('Fig211', jsonFig211);
-        });
-
-</script>
-<script src="../Scripts/Highcharts/9.3.1/highstock.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/highcharts-more.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/data.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/exporting.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/export-data.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/funnel.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/solid-gauge.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/series-label.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/accessibility.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/annotations.js"></script>
-<script src="../Scripts/Highcharts/9.3.1/annotations-advanced.js"></script>
+        };
+    </script>
+    <script src="../Scripts/Highcharts/9.3.1/highstock.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/highcharts-more.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/data.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/exporting.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/export-data.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/funnel.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/solid-gauge.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/series-label.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/accessibility.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/annotations.js"></script>
+    <script src="../Scripts/Highcharts/9.3.1/annotations-advanced.js"></script>
 </body>
 </html>
