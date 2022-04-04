@@ -13,26 +13,37 @@ namespace FigurePreview.Factories
         {
             var figures = FigureConfiguration.Instance.FigurePreview.Figure;
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder htmlContent = new StringBuilder();
+
+
+
+            htmlContent.AppendLine("<div class=\"figures\">");
 
             foreach (var figure in figures)
             {
-                sb.Append($"<div>{figure.Name}</div>");
+                htmlContent.AppendLine("<div class=\"figure\">");
+
+                htmlContent.Append($"<h2>{figure.Name}</h2>");
                 // build up content
                 foreach (var ext in figure.Extentions.Ext)
                 {
-                    
+                    htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
+                    htmlContent.Append($"<div class=\"ext-content\">Some cool content</div>");
                 }
+
+                htmlContent.AppendLine("</div>");
             }
 
-            var displayContent = sb.ToString();
+            htmlContent.AppendLine("</div>");
+
+            var displayContent = htmlContent.ToString();
 
             // read template file and replace with content
             var templateFilePath = GetTemplateFilePath();
             var templateHtml = File.ReadAllText(templateFilePath, Encoding.UTF8);
             //previewHtml = previewHtml.Replace("#chartJson#", !string.IsNullOrEmpty(jsonData) ? jsonData : "undefined");
 
-            var viewHtml = templateHtml.Replace("{{DisplayItemInfo}}", displayContent);
+            var viewHtml = templateHtml.Replace("{{FiguresInfo}}", displayContent);
             var viewPath = GetViewFilePath(displayItem.Name);
             File.WriteAllText(viewPath, viewHtml, Encoding.UTF8);
 

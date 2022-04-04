@@ -1,24 +1,4 @@
-﻿.item-container {
-    margin-bottom: 10px;
-}
-.item-header {
-    color: #000;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 3px 0 3px 3px;
-    border-bottom: 2px solid #000000;
-    margin-bottom: 10px;
-}
-
-#chartData {
-    width: 99%
-}
-
-
-
-
-
-* {
+﻿* {
     box-sizing: border-box;
 }
 
@@ -30,16 +10,17 @@ body {
     padding: 0;
     margin: 0;
     background-color: #fff;
+    font-family: "open-sans"
 }
 
 h2 {
-    color: #000;
-    background-color: #c2c2c2;
+    color: #fff;
+    background-color: #144696;
     padding: 0.5em 0.5em;
     margin: 0;
-    /*border-bottom: 0.1em solid #000;*/
-    font-size: 1.6em;
-    min-height: 3.5em;
+    border-bottom: 0.1em solid #333333;
+    font-size: 1.2em;
+    min-height: 3.3em;
 }
 
 .figure {
@@ -55,17 +36,23 @@ h2 {
     grid-gap: 0.3em;
 }
 
-.ext-header {
-    background-color: green;
+.ext-error {
+    color: #fff;
+    background-color: #cd4658;
     padding: 0.5em 0.5em;
-    margin: 0;
-    border: 0.1em solid #000;
+}
+
+.ext-header {
+    background-color: #e0e0e0;
+    color: #000;
+    padding: 0.5em 0.5em;
+    border-bottom: 0.1em solid #ababab;
+    border-top: 0.1em solid #ababab;
+    margin-top: 1em;
 }
 
 .ext-content {
-    border-bottom: 0.1em solid #000;
-    padding: 0.5em 0.5em;
-    margin: 0;
+    margin-top: 1em;
 }
 
 .ext-content img {
@@ -74,13 +61,26 @@ h2 {
 }
 
 
-.figures {
-    grid-template-columns: repeat(4, 1fr);
-    /*
-@media (min-width: 600px) {
-  .cards { grid-template-columns: repeat(2, 1fr); }
+.figures { grid-template-columns: repeat(4, 1fr); }
+
+
+
+
+
+.item-container {
+    margin-bottom: 10px;
 }
 
-@media (min-width: 900px) {
-  .cards { grid-template-columns: repeat(3, 1fr); }
-}*/
+.item-header {
+    color: #000;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 3px 0 3px 3px;
+    border-bottom: 2px solid #000000;
+    margin-bottom: 10px;
+}
+
+#chartData {
+    width: 99%
+}
+
