@@ -29,29 +29,29 @@ namespace FigurePreview
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblFiguresRootInfo = new System.Windows.Forms.Label();
             this.listBoxDisplayItems = new System.Windows.Forms.ListBox();
             this.webView2FigureView = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonSelectFiguresFolder = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.webView2FigureView)).BeginInit();
             this.SuspendLayout();
             // 
-            // label1
+            // lblFiguresRootInfo
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(29, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 13);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Hent filer fra";
+            this.lblFiguresRootInfo.AutoSize = true;
+            this.lblFiguresRootInfo.Location = new System.Drawing.Point(167, 17);
+            this.lblFiguresRootInfo.Name = "lblFiguresRootInfo";
+            this.lblFiguresRootInfo.Size = new System.Drawing.Size(92, 13);
+            this.lblFiguresRootInfo.TabIndex = 0;
+            this.lblFiguresRootInfo.Text = "lblFiguresRootInfo";
             // 
             // listBoxDisplayItems
             // 
             this.listBoxDisplayItems.FormattingEnabled = true;
-            this.listBoxDisplayItems.Location = new System.Drawing.Point(32, 49);
+            this.listBoxDisplayItems.Location = new System.Drawing.Point(12, 67);
             this.listBoxDisplayItems.Name = "listBoxDisplayItems";
-            this.listBoxDisplayItems.Size = new System.Drawing.Size(120, 433);
+            this.listBoxDisplayItems.Size = new System.Drawing.Size(152, 511);
             this.listBoxDisplayItems.TabIndex = 1;
             this.listBoxDisplayItems.SelectedIndexChanged += new System.EventHandler(this.listBoxDisplayItems_SelectedIndexChanged);
             // 
@@ -62,33 +62,33 @@ namespace FigurePreview
             | System.Windows.Forms.AnchorStyles.Right)));
             this.webView2FigureView.CreationProperties = null;
             this.webView2FigureView.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webView2FigureView.Location = new System.Drawing.Point(173, 49);
+            this.webView2FigureView.Location = new System.Drawing.Point(170, 67);
             this.webView2FigureView.Name = "webView2FigureView";
-            this.webView2FigureView.Size = new System.Drawing.Size(722, 433);
+            this.webView2FigureView.Size = new System.Drawing.Size(949, 511);
             this.webView2FigureView.TabIndex = 2;
             this.webView2FigureView.ZoomFactor = 1D;
             // 
-            // button1
+            // buttonSelectFiguresFolder
             // 
-            this.button1.Location = new System.Drawing.Point(111, 2);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "buttonSelectFolder";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonSelectFiguresFolder.Location = new System.Drawing.Point(12, 12);
+            this.buttonSelectFiguresFolder.Name = "buttonSelectFiguresFolder";
+            this.buttonSelectFiguresFolder.Size = new System.Drawing.Size(147, 23);
+            this.buttonSelectFiguresFolder.TabIndex = 3;
+            this.buttonSelectFiguresFolder.Text = "Velg rootmappe for figurer";
+            this.buttonSelectFiguresFolder.UseVisualStyleBackColor = true;
+            this.buttonSelectFiguresFolder.Click += new System.EventHandler(this.buttonSelectFiguresFolder_Click);
             // 
             // PreviewToolForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(966, 589);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(1131, 589);
+            this.Controls.Add(this.buttonSelectFiguresFolder);
             this.Controls.Add(this.webView2FigureView);
             this.Controls.Add(this.listBoxDisplayItems);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblFiguresRootInfo);
             this.Name = "PreviewToolForm";
-            this.Text = "Form1";
+            this.Text = "Forhåndsvisningsverktøy ";
             this.Load += new System.EventHandler(this.PreviewToolForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.webView2FigureView)).EndInit();
             this.ResumeLayout(false);
@@ -98,11 +98,11 @@ namespace FigurePreview
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblFiguresRootInfo;
         private System.Windows.Forms.ListBox listBoxDisplayItems;
         private Microsoft.Web.WebView2.WinForms.WebView2 webView2FigureView;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonSelectFiguresFolder;
     }
 }
 

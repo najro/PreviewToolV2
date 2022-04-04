@@ -9,20 +9,27 @@ namespace FigurePreview.Factories
     public class FigureItemFactory
     {
 
-        public List<FigureItem> GetDisplayItems()
+        public List<FigureItem> GetDisplayItems(string selectedPathFiguresRootFolder)
         {
             List<FigureItem> figureItems = new List<FigureItem>();
 
+            if (string.IsNullOrWhiteSpace(selectedPathFiguresRootFolder))
+                return figureItems;
 
-            // Check 4 areas based on configuration
-            string rootFolder =
-                "C:\\Users\\pa_xoran\\Downloads\\FigurPreviewTest\\FigurProsjektet\\Lager\\STM\\20212022\\240";
 
             var figures = FigureConfiguration.Instance.FigurePreview.Figure;
 
             foreach (var figure in figures)
             {
-                string filesToPreviewFolder = $"{rootFolder}\\{figure.FormatPath}";
+
+                string filesToPreviewFolder = $"{selectedPathFiguresRootFolder}\\{figure.FormatPath}";
+
+                if (!Directory.Exists(filesToPreviewFolder))
+                {
+                    continue;
+                }
+
+
                 // read all files from preview folder to build up unique list of file names
                 var files = Directory.GetFiles(filesToPreviewFolder, "*.*", SearchOption.AllDirectories);
 
@@ -63,11 +70,8 @@ namespace FigurePreview.Factories
                         figureItem.AddFigureInfo(figureInfo);
                     }
 
-
-
                 }
             }
-
 
             return figureItems.OrderBy(o => o.Name).ToList();
         }
