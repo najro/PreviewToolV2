@@ -27,13 +27,14 @@ namespace FigurePreview.Factories
 
                 if (displayFigureItem.HasNotValidFigureExtensions(figure))
                 {
-                    htmlContent.Append($"<div class=\"ext-error\">Mappe innholder filer med ikke godkjent format</div>");
+                    htmlContent.Append(
+                        $"<div class=\"ext-error\">Mappe inneholder fil med filendelse som ikke er godkjent</div>");
                 }
 
                 // build up content
                 foreach (var ext in figure.Extentions.Ext)
                 {
-                   
+
 
                     if (displayFigureItem.HasExtension(figure, ext))
                     {
@@ -41,7 +42,8 @@ namespace FigurePreview.Factories
                         var figureInfo = displayFigureItem.GetFigureInfoForExtension(figure, ext);
 
                         htmlContent.Append($"<div class=\"ext-header\">{figureInfo.FileName}.{ext}</div>");
-                        htmlContent.Append($"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
+                        htmlContent.Append(
+                            $"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
                     }
                     //else
                     //{
@@ -61,9 +63,10 @@ namespace FigurePreview.Factories
             // read template file and replace with content
             var templateFilePath = GetTemplateFilePath();
             var viewHtml = File.ReadAllText(templateFilePath, Encoding.UTF8);
-            
+
             viewHtml = viewHtml.Replace("{{FiguresContent}}", displayContent);
-            viewHtml = viewHtml.Replace("{{FiguresGridStyle}}", $".figures {{grid-template-columns : repeat({figures.Count}, 1fr);}}");
+            viewHtml = viewHtml.Replace("{{FiguresGridStyle}}",
+                $".figures {{grid-template-columns : repeat({figures.Count}, 1fr);}}");
             var viewPath = GetViewFilePath(displayFigureItem.Name);
             File.WriteAllText(viewPath, viewHtml, Encoding.UTF8);
 
@@ -79,6 +82,12 @@ namespace FigurePreview.Factories
         private string GetViewFilePath(string fileName)
         {
             var viewPath = Directory.GetCurrentDirectory() + $"\\{HtmlViewFolder}\\View\\{fileName}.htm";
+            return viewPath;
+        }
+
+        private string GetViewDirectoryPath()
+        {
+            var viewPath = Directory.GetCurrentDirectory() + $"\\{HtmlViewFolder}\\View";
             return viewPath;
         }
 
@@ -98,7 +107,7 @@ namespace FigurePreview.Factories
                     sb.AppendLine(BuildJsonContent(figureInfo));
                     break;
                 default:
-                    sb.Append($"Finnes ikke supportert visning for {figureInfo.FileExtension}");
+                    sb.Append($"Savner visning for {figureInfo.FileExtension}");
                     break;
 
             }
@@ -116,15 +125,14 @@ namespace FigurePreview.Factories
         private string BuildJsonContent(FigureInfo figureInfo)
         {
             var sb = new StringBuilder();
-
             var jsonFileContent = string.Join("", File.ReadAllLines(figureInfo.FilePath, Encoding.UTF8));
-
-            // replace all not valid chars with reqexp instead of replace
 
             var chartId = Guid.NewGuid().ToString("N");
 
-            sb.AppendLine($"<div id='{chartId}'></div>");
+            // add placeholder for highchart
+            sb.AppendLine($"<div id='{chartId}' class='chartData'></div>");
 
+            // build script that connect json data with highcharts and inject into placeholder
             sb.AppendLine("<script>");
             sb.AppendLine($" var jsonData{chartId} = {jsonFileContent};");
             sb.AppendLine("document.addEventListener('DOMContentLoaded',");
@@ -133,11 +141,23 @@ namespace FigurePreview.Factories
             sb.AppendLine($"Highcharts.chart('{chartId}', jsonData{chartId});");
             sb.AppendLine("});");
             sb.AppendLine("</script>");
-
-          
-
             return sb.ToString();
         }
 
+        public void CleanUpViewFiles()
+        {
+            // Remove all previous preview files
+            DirectoryInfo di = new DirectoryInfo($"{GetViewDirectoryPath()}");
+            foreach (FileInfo file in di.EnumerateFiles())
+            {
+                if (file.FullName.Contains("default.htm"))
+                {
+                    continue;
+                }
+
+                file.Delete();
+            }
+
+        }
     }
 }

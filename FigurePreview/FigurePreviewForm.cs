@@ -65,10 +65,14 @@ namespace FigurePreview
             }
 
             lblFiguresRootInfo.Text = $"Figurer hentes fra mappe : {selectedPathFiguresRootFolder}";
+
+            htmlViewFactory.CleanUpViewFiles();
         }
 
         private async void PreviewToolForm_Load(object sender, EventArgs e)
         {
+            
+            
             await InitializeAsync();
             
             if ((webView2FigureView == null) || (webView2FigureView.CoreWebView2 == null))
