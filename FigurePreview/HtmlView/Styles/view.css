@@ -53,9 +53,15 @@ h2 {
 
 .ext-content {
     margin-top: 1em;
+    color: #000;
 }
 
 .ext-content img {
+    width: 100%;
+    height: auto;
+}
+
+.ext-content svg {
     width: 100%;
     height: auto;
 }

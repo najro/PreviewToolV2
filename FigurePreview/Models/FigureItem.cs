@@ -50,5 +50,23 @@ namespace FigurePreview.Models
 
             return unvalidExtensions;
         }
+
+        public bool HasExtension(Figure currentFigureEntry, string extension)
+        {
+            var hasExtensions = _figureInfoList.Any(x =>
+                x.AllowedExtension == true && x.FigureFormatPath == currentFigureEntry.FormatPath &&
+                x.FileExtension == extension);
+
+            return hasExtensions;
+        }
+
+        public FigureInfo GetFigureInfoForExtension(Figure currentFigureEntry, string extension)
+        {
+            var figureInfo = _figureInfoList.Where(x =>
+                x.AllowedExtension == true && x.FigureFormatPath == currentFigureEntry.FormatPath &&
+                x.FileExtension == extension).First();
+
+            return figureInfo;
+        }
     }
 }

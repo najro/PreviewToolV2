@@ -32,8 +32,22 @@ namespace FigurePreview.Factories
                 // build up content
                 foreach (var ext in figure.Extentions.Ext)
                 {
-                    htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
-                    htmlContent.Append($"<div class=\"ext-content\">Some cool content</div>");
+                   
+
+                    if (displayFigureItem.HasExtension(figure, ext))
+                    {
+
+                        var figureInfo = displayFigureItem.GetFigureInfoForExtension(figure, ext);
+
+                        htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
+                        htmlContent.Append($"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
+                    }
+                    else
+                    {
+                        // htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
+                        //htmlContent.Append($"<div class=\"ext-content\">Savnes</div>");
+                    }
+
                 }
 
                 htmlContent.AppendLine("</div>");
@@ -69,5 +83,61 @@ namespace FigurePreview.Factories
             var viewPath = Directory.GetCurrentDirectory() + $"\\{HtmlViewFolder}\\View\\{fileName}.htm";
             return viewPath;
         }
+
+        private string BuildFigureContentBasedOnExtension(FigureInfo figureInfo)
+        {
+            var sb = new StringBuilder();
+
+            switch (figureInfo.FileExtension)
+            {
+                case "png":
+                case "jpg":
+                case "jpeg":
+                case "svg":
+                    sb.AppendLine(BuildImageContent(figureInfo));
+                    break;
+                case "json":
+                    sb.AppendLine(BuildJsonContent(figureInfo));
+                    break;
+                default:
+                    sb.Append($"Finnes ikke supportert visning for {figureInfo.FileExtension}");
+                    break;
+
+            }
+
+            return sb.ToString();
+        }
+
+        private string BuildImageContent(FigureInfo figureInfo)
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine($"<img src=\"{figureInfo.FilePath}\"/>");
+            return sb.ToString();
+        }
+
+        private string BuildJsonContent(FigureInfo figureInfo)
+        {
+            var sb = new StringBuilder();
+
+            var jsonFileContent = string.Join("", File.ReadAllLines(figureInfo.FilePath, Encoding.UTF8));
+
+            // replace all not valid chars with reqexp instead of replace
+
+            var chartId = figureInfo.FileName.Replace(" ", "").Replace(".", "").Replace("_", "").Replace("-", "");
+
+            sb.AppendLine($"<div id='{chartId}'>Render chart here...</div>");
+
+            sb.AppendLine("<script>");
+            sb.AppendLine($" var json{chartId} = {jsonFileContent};");
+
+            //sb.AppendLine($"Highcharts.chart('{chartId}', json{chartId});");
+            
+            sb.AppendLine("</script>");
+
+          
+
+            return sb.ToString();
+        }
+
     }
 }

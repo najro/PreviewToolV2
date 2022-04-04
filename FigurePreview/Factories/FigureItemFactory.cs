@@ -46,6 +46,7 @@ namespace FigurePreview.Factories
                     {
                         FigureName = figure.Name,
                         FigureFormatPath = figure.FormatPath,
+                        FileName = fileNameWithoutExt,
                         FilePath = file,
                         FileExtension = fileExtension,
                         AllowedExtension = figure.Extentions.Ext.Exists(x => x.ToLower() == fileExtension)
