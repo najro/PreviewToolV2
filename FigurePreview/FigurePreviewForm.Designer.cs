@@ -29,6 +29,7 @@ namespace FigurePreview
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PreviewToolForm));
             this.lblFiguresRootInfo = new System.Windows.Forms.Label();
             this.listBoxDisplayItems = new System.Windows.Forms.ListBox();
             this.webView2FigureView = new Microsoft.Web.WebView2.WinForms.WebView2();
@@ -49,10 +50,12 @@ namespace FigurePreview
             // 
             // listBoxDisplayItems
             // 
+            this.listBoxDisplayItems.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.listBoxDisplayItems.FormattingEnabled = true;
-            this.listBoxDisplayItems.Location = new System.Drawing.Point(12, 67);
+            this.listBoxDisplayItems.Location = new System.Drawing.Point(12, 54);
             this.listBoxDisplayItems.Name = "listBoxDisplayItems";
-            this.listBoxDisplayItems.Size = new System.Drawing.Size(152, 511);
+            this.listBoxDisplayItems.Size = new System.Drawing.Size(152, 524);
             this.listBoxDisplayItems.TabIndex = 1;
             this.listBoxDisplayItems.SelectedIndexChanged += new System.EventHandler(this.listBoxDisplayItems_SelectedIndexChanged);
             // 
@@ -63,9 +66,9 @@ namespace FigurePreview
             | System.Windows.Forms.AnchorStyles.Right)));
             this.webView2FigureView.CreationProperties = null;
             this.webView2FigureView.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webView2FigureView.Location = new System.Drawing.Point(170, 67);
+            this.webView2FigureView.Location = new System.Drawing.Point(170, 54);
             this.webView2FigureView.Name = "webView2FigureView";
-            this.webView2FigureView.Size = new System.Drawing.Size(949, 511);
+            this.webView2FigureView.Size = new System.Drawing.Size(949, 524);
             this.webView2FigureView.TabIndex = 2;
             this.webView2FigureView.ZoomFactor = 1D;
             // 
@@ -75,14 +78,14 @@ namespace FigurePreview
             this.buttonSelectFiguresFolder.Name = "buttonSelectFiguresFolder";
             this.buttonSelectFiguresFolder.Size = new System.Drawing.Size(147, 23);
             this.buttonSelectFiguresFolder.TabIndex = 3;
-            this.buttonSelectFiguresFolder.Text = "Velg rootmappe for figurer";
+            this.buttonSelectFiguresFolder.Text = "Velg rotmappe for figurer";
             this.buttonSelectFiguresFolder.UseVisualStyleBackColor = true;
             this.buttonSelectFiguresFolder.Click += new System.EventHandler(this.buttonSelectFiguresFolder_Click);
             // 
             // buttonRefreshHtml
             // 
             this.buttonRefreshHtml.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRefreshHtml.Location = new System.Drawing.Point(1044, 38);
+            this.buttonRefreshHtml.Location = new System.Drawing.Point(1044, 12);
             this.buttonRefreshHtml.Name = "buttonRefreshHtml";
             this.buttonRefreshHtml.Size = new System.Drawing.Size(75, 23);
             this.buttonRefreshHtml.TabIndex = 4;
@@ -100,6 +103,7 @@ namespace FigurePreview
             this.Controls.Add(this.webView2FigureView);
             this.Controls.Add(this.listBoxDisplayItems);
             this.Controls.Add(this.lblFiguresRootInfo);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PreviewToolForm";
             this.Text = "Forhåndsvisningsverktøy ";
             this.Load += new System.EventHandler(this.PreviewToolForm_Load);
