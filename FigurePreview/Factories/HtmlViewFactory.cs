@@ -1,4 +1,5 @@
-﻿using FigurePreview.Configuration;
+﻿using System;
+using FigurePreview.Configuration;
 using System.IO;
 using System.Text;
 using FigurePreview.Models;
@@ -44,8 +45,8 @@ namespace FigurePreview.Factories
                     }
                     else
                     {
-                        // htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
-                        //htmlContent.Append($"<div class=\"ext-content\">Savnes</div>");
+                         htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
+                        htmlContent.Append($"<div class=\"ext-content\">Savnes</div>");
                     }
 
                 }
@@ -123,15 +124,17 @@ namespace FigurePreview.Factories
 
             // replace all not valid chars with reqexp instead of replace
 
-            var chartId = figureInfo.FileName.Replace(" ", "").Replace(".", "").Replace("_", "").Replace("-", "");
+            var chartId = Guid.NewGuid().ToString("N");
 
-            sb.AppendLine($"<div id='{chartId}'>Render chart here...</div>");
+            sb.AppendLine($"<div id='{chartId}'></div>");
 
             sb.AppendLine("<script>");
-            sb.AppendLine($" var json{chartId} = {jsonFileContent};");
-
-            //sb.AppendLine($"Highcharts.chart('{chartId}', json{chartId});");
-            
+            sb.AppendLine($" var jsonData{chartId} = {jsonFileContent};");
+            sb.AppendLine("document.addEventListener('DOMContentLoaded',");
+            sb.AppendLine("function(){");
+            sb.AppendLine("Highcharts.setOptions(setOptions);");
+            sb.AppendLine($"Highcharts.chart('{chartId}', jsonData{chartId});");
+            sb.AppendLine("});");
             sb.AppendLine("</script>");
 
           
