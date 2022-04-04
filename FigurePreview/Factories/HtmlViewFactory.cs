@@ -9,12 +9,10 @@ namespace FigurePreview.Factories
     {
         private const string HtmlViewFolder = "HtmlView";
 
-        public string CreateHtmlViewForFile(FigureItem displayItem)
+        public string CreateHtmlViewForFile(FigureItem displayFigureItem)
         {
             var figures = FigureConfiguration.Instance.FigurePreview.Figure;
-
-            StringBuilder htmlContent = new StringBuilder();
-
+            var htmlContent = new StringBuilder();
 
 
             htmlContent.AppendLine("<div class=\"figures\">");
@@ -24,6 +22,13 @@ namespace FigurePreview.Factories
                 htmlContent.AppendLine("<div class=\"figure\">");
 
                 htmlContent.Append($"<h2>{figure.Name}</h2>");
+
+
+                if (displayFigureItem.HasNotValidFigureExtensions(figure))
+                {
+                    htmlContent.Append($"<div class=\"ext-error\">Mappe innholder filer med ikke godkjent format</div>");
+                }
+
                 // build up content
                 foreach (var ext in figure.Extentions.Ext)
                 {
@@ -44,7 +49,7 @@ namespace FigurePreview.Factories
             //previewHtml = previewHtml.Replace("#chartJson#", !string.IsNullOrEmpty(jsonData) ? jsonData : "undefined");
 
             var viewHtml = templateHtml.Replace("{{FiguresInfo}}", displayContent);
-            var viewPath = GetViewFilePath(displayItem.Name);
+            var viewPath = GetViewFilePath(displayFigureItem.Name);
             File.WriteAllText(viewPath, viewHtml, Encoding.UTF8);
 
           

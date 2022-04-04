@@ -36,16 +36,19 @@ namespace FigurePreview.Models
             return true;
         }
 
-        public bool HasFigureExtension(Figure figure, string extension)
+        public bool HasNotValidFigureExtensions(Figure currentFigureEntry)
         {
-            return true;
+            return GetNotValidFigureExtensions(currentFigureEntry).Count > 0;
         }
 
-        public List<string> MissmatchFigureExtension(Figure figure, string extension)
+        public List<string> GetNotValidFigureExtensions(Figure currentFigureEntry)
         {
-            
-            return new List<string>();
-            
+            // read all extensions found for this figure item in specific figure configuration folder
+            var unvalidExtensions = _figureInfoList
+                .Where(x => x.AllowedExtension == false && x.FigureFormatPath == currentFigureEntry.FormatPath)
+                .Select(x => x.FileExtension).ToList();
+
+            return unvalidExtensions;
         }
     }
 }
