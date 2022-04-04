@@ -23,8 +23,8 @@ h2 {
     padding: 0.5em 0.5em;
     margin: 0;
     border-bottom: 0.1em solid #333333;
-    font-size: 1.2em;
-    min-height: 3.3em;
+    font-size: 1em;
+    min-height: 3.4em;
 }
 
 .figure {
@@ -53,6 +53,7 @@ h2 {
     border-bottom: 0.1em solid #ababab;
     border-top: 0.1em solid #ababab;
     margin-top: 1em;
+    font-size: 0.8em;
 }
 
 .ext-content {
@@ -90,7 +91,7 @@ h2 {
     margin-bottom: 10px;
 }
 
-#chartData {
-    width: 99%
+.chartData {
+    width: 98%
 }
 
