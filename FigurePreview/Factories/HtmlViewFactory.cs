@@ -101,6 +101,7 @@ namespace FigurePreview.Factories
                 case "jpg":
                 case "jpeg":
                 case "svg":
+                case "gif":
                     sb.AppendLine(BuildImageContent(figureInfo));
                     break;
                 case "json":
