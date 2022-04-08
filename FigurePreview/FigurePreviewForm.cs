@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
@@ -21,14 +22,16 @@ namespace FigurePreview
         private FigureItemFactory figureItemFactory;
         private HtmlViewFactory htmlViewFactory;
         private string selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+        private FileSystemWatcher watcher;
 
         public PreviewToolForm()
         {
             InitializeComponent();
 
+            WatchFileModifications();
+
             ReLoadConfigurationAndDisplayFigures();
 
-            WatchFileModifications();
         }
 
 
@@ -44,7 +47,7 @@ namespace FigurePreview
             {
 
                 var startPath = FigureConfiguration.Instance.FigurePreview.StartPath;
-                var dynamicPublicationPath = FigureConfiguration.Instance.FigurePreview.PublicationDynamicPath.Text;
+                var dynamicPublicationPath = FigureConfiguration.Instance.FigurePreview.PublicationDynamicPath?.Text;
 
 
                 selectedPathFiguresRootFolder = $"{startPath}\\{dynamicPublicationPath}";
@@ -52,12 +55,13 @@ namespace FigurePreview
 
             DisplayFigures();
             SetDefaultView();
+           
         }
 
 
         public void WatchFileModifications()
         {
-            var watcher = new FileSystemWatcher($"{FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory}");
+             watcher = new FileSystemWatcher($"{FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory}");
 
             watcher.NotifyFilter = NotifyFilters.LastWrite;
 
@@ -77,8 +81,11 @@ namespace FigurePreview
         public void UpdateUI2()
         {
             
-            FigureConfiguration.Instance.SetPublicationDynamicPath();
-            ReLoadConfigurationAndDisplayFigures();
+                FigureConfiguration.Instance.SetPublicationDynamicPath();
+                ReLoadConfigurationAndDisplayFigures();
+                WatchFileModifications();
+
+
         }
 
         private void SetDefaultView()
@@ -88,7 +95,16 @@ namespace FigurePreview
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            Invoke(new UpdateUI(UpdateUI2));
+
+            
+                watcher.Dispose();
+
+                Invoke(new UpdateUI(UpdateUI2));
+                
+
+
+
+
         }
 
         private void InitializeFactories()

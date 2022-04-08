@@ -14,27 +14,8 @@ namespace FigurePreview.Configuration
 
         private FigureConfiguration()
         {
-            try
-            {
-                XmlSerializer deserializer = new XmlSerializer(typeof(FigurePreview));
-                TextReader textReader = new StreamReader(GetConfigurationFilePath());
-                _figurePreview = (FigurePreview)deserializer.Deserialize(textReader);
-                textReader.Close();
-
-            }
-            catch (Exception exp)
-            {
-                throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
-            }
-
-
+            SetFigurePreview();
             SetPublicationDynamicPath();
-
-        }
-
-        private string GetConfigurationFilePath()
-        {
-            return $"{Directory.GetCurrentDirectory()}\\{FigureConfigurationFile}";
         }
 
         public static FigureConfiguration Instance
@@ -51,21 +32,51 @@ namespace FigurePreview.Configuration
 
         }
 
-        public void SetPublicationDynamicPath()
+
+        private string GetConfigurationFilePath()
+        {
+            return $"{Directory.GetCurrentDirectory()}\\{FigureConfigurationFile}";
+        }
+
+        public void SetFigurePreview()
         {
             try
             {
-                XmlSerializer deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
-                TextReader textReader = new StreamReader(_figurePreview.DynamicPathFile.Text);
-                _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(textReader);
-                textReader.Close();
+                XmlSerializer deserializer = new XmlSerializer(typeof(FigurePreview));
+                //TextReader textReader = new StreamReader(GetConfigurationFilePath());
+
+                var inStream = new FileStream(GetConfigurationFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                _figurePreview = (FigurePreview)deserializer.Deserialize(inStream);
+                //textReader.Close();
+
             }
             catch (Exception exp)
             {
                 throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
             }
+
         }
 
+        public void SetPublicationDynamicPath()
+        {
+            try
+            {
+
+                var inStream = new FileStream(_figurePreview.DynamicPathFile.Text, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+
+
+                XmlSerializer deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
+                //TextReader textReader = new StreamReader(_figurePreview.DynamicPathFile.Text);
+                _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(inStream);
+                //textReader.Close();
+            }
+            catch (Exception exp)
+            {
+                throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
+            }
+
+        }
 
         // add logic for DynamicPathFile
         public bool IsConfigurationValid(out string errorMessage)
