@@ -33,7 +33,7 @@ namespace FigurePreview.Factories
                     htmlContent.Append("<ul>");
                     foreach (var extNotValid in displayFigureItem.GetNotValidFigureExtensions(figure))
                     {
-                        htmlContent.Append($"<li>{extNotValid}</ul>");
+                        htmlContent.Append($"<li>{extNotValid}</ll>");
                     }
                     htmlContent.Append("</ul>");
 
@@ -136,11 +136,18 @@ namespace FigurePreview.Factories
 
             // build script that connect json data with highcharts and inject into placeholder
             sb.AppendLine("<script>");
-            sb.AppendLine($" var jsonData{chartId} = {jsonFileContent};");
+
+            var jsonDataVariableName = $"jsonData{chartId}";
+
+            sb.AppendLine($" var {jsonDataVariableName} = {jsonFileContent};");
+
+            sb.AppendLine($"{jsonDataVariableName}.title = null;");
+            sb.AppendLine($"{jsonDataVariableName}.subtitle = null;");
+
             sb.AppendLine("document.addEventListener('DOMContentLoaded',");
             sb.AppendLine("function(){");
             sb.AppendLine("Highcharts.setOptions(setOptions);");
-            sb.AppendLine($"Highcharts.chart('{chartId}', jsonData{chartId});");
+            sb.AppendLine($"Highcharts.chart('{chartId}', {jsonDataVariableName});");
             sb.AppendLine("});");
             sb.AppendLine("</script>");
             return sb.ToString();
