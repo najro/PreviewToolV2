@@ -28,14 +28,21 @@ namespace FigurePreview.Factories
                 if (displayFigureItem.HasNotValidFigureExtensions(figure))
                 {
                     htmlContent.Append(
-                        $"<div class=\"ext-error\">Mappe inneholder fil med filendelse som ikke er godkjent</div>");
+                        $"<div class=\"ext-error\">Mappe inneholder fil som ikke er godkjent.");
+
+                    htmlContent.Append("<ul>");
+                    foreach (var extNotValid in displayFigureItem.GetNotValidFigureExtensions(figure))
+                    {
+                        htmlContent.Append($"<li>{extNotValid}</ul>");
+                    }
+                    htmlContent.Append("</ul>");
+
+                    htmlContent.Append("</div>");
                 }
 
                 // build up content
                 foreach (var ext in figure.Extentions.Ext)
                 {
-
-
                     if (displayFigureItem.HasExtension(figure, ext))
                     {
 
@@ -45,12 +52,6 @@ namespace FigurePreview.Factories
                         htmlContent.Append(
                             $"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
                     }
-                    //else
-                    //{
-                    //     htmlContent.Append($"<div class=\"ext-header\">Preview {ext}</div>");
-                    //     htmlContent.Append($"<div class=\"ext-content\">Savnes</div>");
-                    //}
-
                 }
 
                 htmlContent.AppendLine("</div>");

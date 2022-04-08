@@ -46,6 +46,16 @@ h2 {
     padding: 0.5em 0.5em;
 }
 
+.ext-error ul {
+    padding-left: 1em;
+    margin-top: 0.5em;
+}
+
+.ext-error ul li {
+    list-style: square;
+    padding-bottom: 0.1em;
+}
+
 .ext-header {
     background-color: #e0e0e0;
     color: #000;
