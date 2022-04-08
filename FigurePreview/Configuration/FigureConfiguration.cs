@@ -20,11 +20,15 @@ namespace FigurePreview.Configuration
                 TextReader textReader = new StreamReader(GetConfigurationFilePath());
                 _figurePreview = (FigurePreview)deserializer.Deserialize(textReader);
                 textReader.Close();
+
             }
             catch (Exception exp)
             {
                 throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
             }
+
+
+            SetPublicationDynamicPath();
 
         }
 
@@ -47,6 +51,23 @@ namespace FigurePreview.Configuration
 
         }
 
+        public void SetPublicationDynamicPath()
+        {
+            try
+            {
+                XmlSerializer deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
+                TextReader textReader = new StreamReader(_figurePreview.DynamicPathFile.Text);
+                _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(textReader);
+                textReader.Close();
+            }
+            catch (Exception exp)
+            {
+                throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
+            }
+        }
+
+
+        // add logic for DynamicPathFile
         public bool IsConfigurationValid(out string errorMessage)
         {
             var validConfiguration = true;

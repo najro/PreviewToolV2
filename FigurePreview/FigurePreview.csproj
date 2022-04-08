@@ -57,10 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\DynamicPathFile.cs" />
     <Compile Include="Configuration\Extentions.cs" />
     <Compile Include="Configuration\Figure.cs" />
     <Compile Include="Configuration\FigureConfiguration.cs" />
     <Compile Include="Configuration\FigurePreview.cs" />
+    <Compile Include="Configuration\PublicationDynamicPath.cs" />
     <Compile Include="Factories\FigureItemFactory.cs" />
     <Compile Include="Factories\HtmlViewFactory.cs" />
     <Compile Include="FigurePreviewForm.cs">

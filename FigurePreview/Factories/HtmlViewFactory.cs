@@ -47,10 +47,8 @@ namespace FigurePreview.Factories
                     {
 
                         var figureInfo = displayFigureItem.GetFigureInfoForExtension(figure, ext);
-
                         htmlContent.Append($"<div class=\"ext-header\">{figureInfo.FileName}.{ext}</div>");
-                        htmlContent.Append(
-                            $"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
+                        htmlContent.Append($"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
                     }
                 }
 

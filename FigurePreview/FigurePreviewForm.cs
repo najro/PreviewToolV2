@@ -25,9 +25,70 @@ namespace FigurePreview
         public PreviewToolForm()
         {
             InitializeComponent();
+
+            ReLoadConfigurationAndDisplayFigures();
+
+            WatchFileModifications();
+        }
+
+
+        public void ReLoadConfigurationAndDisplayFigures()
+        {
+
+           
+
             InitializeFactories();
             VerifyConfiguration();
+
+            if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enable)
+            {
+
+                var startPath = FigureConfiguration.Instance.FigurePreview.StartPath;
+                var dynamicPublicationPath = FigureConfiguration.Instance.FigurePreview.PublicationDynamicPath.Text;
+
+
+                selectedPathFiguresRootFolder = $"{startPath}\\{dynamicPublicationPath}";
+            }
+
             DisplayFigures();
+            SetDefaultView();
+        }
+
+
+        public void WatchFileModifications()
+        {
+            var watcher = new FileSystemWatcher($"{FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory}");
+
+            watcher.NotifyFilter = NotifyFilters.LastWrite;
+
+            watcher.Filter = $"{FigureConfiguration.Instance.FigurePreview.DynamicPathFileName}";
+
+            watcher.EnableRaisingEvents = true;
+
+            watcher.Changed += Watcher_Changed;
+
+
+
+        }
+
+        public delegate void UpdateUI();
+
+
+        public void UpdateUI2()
+        {
+            
+            FigureConfiguration.Instance.SetPublicationDynamicPath();
+            ReLoadConfigurationAndDisplayFigures();
+        }
+
+        private void SetDefaultView()
+        {
+            webView2FigureView.Source = new Uri(Directory.GetCurrentDirectory() + $"\\htmlview\\view\\default.htm");
+        }
+
+        private void Watcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            Invoke(new UpdateUI(UpdateUI2));
         }
 
         private void InitializeFactories()
@@ -119,7 +180,16 @@ namespace FigurePreview
 
         private void buttonRefreshHtml_Click(object sender, EventArgs e)
         {
+
+
+            //ReLoadConfigurationAndDisplayFigures();
+
             webView2FigureView.Reload();
+        }
+
+        private void webView2FigureView_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
