@@ -29,9 +29,7 @@ namespace FigurePreview.Configuration
 
                 return _figureConfiguration;
             }
-
         }
-
 
         private string GetConfigurationFilePath()
         {
@@ -61,11 +59,7 @@ namespace FigurePreview.Configuration
         {
             try
             {
-
                 var inStream = new FileStream(_figurePreview.DynamicPathFile.Text, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-
-
-
                 XmlSerializer deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
                 //TextReader textReader = new StreamReader(_figurePreview.DynamicPathFile.Text);
                 _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(inStream);

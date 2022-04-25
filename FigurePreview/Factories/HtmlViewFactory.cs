@@ -72,6 +72,12 @@ namespace FigurePreview.Factories
             return viewPath;
         }
 
+        public string GetDefaultView()
+        {
+            string defaultView = Directory.GetCurrentDirectory() + $"\\htmlview\\view\\default.htm";
+            return defaultView;
+        }
+
         private string GetTemplateFilePath()
         {
             var templateFilePath = Directory.GetCurrentDirectory() + $"\\{HtmlViewFolder}\\template\\view-template.htm";

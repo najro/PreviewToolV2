@@ -71,7 +71,7 @@ namespace FigurePreview
             this.webView2FigureView.Size = new System.Drawing.Size(949, 524);
             this.webView2FigureView.TabIndex = 2;
             this.webView2FigureView.ZoomFactor = 1D;
-            this.webView2FigureView.Click += new System.EventHandler(this.webView2FigureView_Click);
+    
             // 
             // buttonSelectFiguresFolder
             // 
