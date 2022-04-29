@@ -15,7 +15,11 @@ namespace FigurePreview.Configuration
         private FigureConfiguration()
         {
             SetFigurePreview();
-            SetPublicationDynamicPath();
+
+            if (FigurePreview.DynamicPathFile.Enable)
+            {
+                SetPublicationDynamicPath();
+            }
         }
 
         public static FigureConfiguration Instance
@@ -40,19 +44,15 @@ namespace FigurePreview.Configuration
         {
             try
             {
-                XmlSerializer deserializer = new XmlSerializer(typeof(FigurePreview));
-                //TextReader textReader = new StreamReader(GetConfigurationFilePath());
-
+                var deserializer = new XmlSerializer(typeof(FigurePreview));
                 var inStream = new FileStream(GetConfigurationFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 _figurePreview = (FigurePreview)deserializer.Deserialize(inStream);
-                //textReader.Close();
-
             }
             catch (Exception exp)
             {
-                throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
+                _figurePreview = null;
+                //throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
             }
-
         }
 
         public void SetPublicationDynamicPath()
@@ -60,16 +60,14 @@ namespace FigurePreview.Configuration
             try
             {
                 var inStream = new FileStream(_figurePreview.DynamicPathFile.Text, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                XmlSerializer deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
-                //TextReader textReader = new StreamReader(_figurePreview.DynamicPathFile.Text);
+                var deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
                 _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(inStream);
-                //textReader.Close();
             }
             catch (Exception exp)
             {
-                throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
+                _figurePreview.PublicationDynamicPath = null;
+                //throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
             }
-
         }
 
         // add logic for DynamicPathFile
@@ -88,9 +86,35 @@ namespace FigurePreview.Configuration
                 error.Append("startpath er tom i XML fil");
             }
 
-            if (string.IsNullOrEmpty(FigurePreview?.PathRoule))
+            // Is not in use
+            //if (string.IsNullOrEmpty(FigurePreview?.PathRoule))
+            //{
+            //    error.Append("PathRoule er tom i XML fil");
+            //}
+
+
+            if (FigurePreview?.DynamicPathFile == null)
             {
-                error.Append("PathRoule er tom i XML fil");
+                error.Append("DynamicPathFile er tom i XML fil");
+            }
+            else
+            {
+                if (FigurePreview.DynamicPathFile.Enable)
+                {
+                    if (string.IsNullOrEmpty(FigurePreview.DynamicPathFile.Text))
+                    {
+                        error.Append("Det savnes informasjon i DynamicPathFile XML");
+                    }
+
+                    if (FigurePreview.PublicationDynamicPath == null)
+                    {
+                        error.Append("Det savnes informasjon for dynamisk pathDynamicPathFile XML fil");
+                    }else if (string.IsNullOrEmpty(FigurePreview.PublicationDynamicPath.Text))
+                    {
+                        error.Append("Det savnes informasjon i PublicationDynamicPath XML");
+                    }
+
+                }
             }
 
             if (FigurePreview?.Figure == null || !FigurePreview.Figure.Any())

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FigurePreview startpath="C:\Users\pa_xoran\Downloads\FigurPreviewTest\FigurProsjektet\Lager">
-  <DynamicPathFile enable="true">C:\Users\pa_xoran\Downloads\FigurPreviewTest\FigurProsjektet\Lager\PublicationDynamicPath.xml</DynamicPathFile>
-  <PathRoule>{startpath}{dynamicpath}{FormatPath}</PathRoule>
+	<DynamicPathFile enable="true">C:\Users\pa_xoran\Downloads\FigurPreviewTest\FigurProsjektet\Lager\PublicationDynamicPath.xml</DynamicPathFile>
+	<PathRoule>{startpath}{dynamicpath}{FormatPath}</PathRoule>
 	<Figure>
 		<Name>Kjerneformat statiske</Name>
 		<FormatPath>HTML\Grafikk</FormatPath>

@@ -16,11 +16,11 @@ namespace FigurePreview
         //TODO
         // Check config and add good excpetion message
         // diable folder selecin if dynamic i true, otherwise keep it
-        // se till att lasta om sida och lägg till listener när dropdown ändras
+        // se till att lasta om sida och lägg till listener när folder dropdown ändras
 
         private FigureItemFactory figureItemFactory;
         private HtmlViewFactory htmlViewFactory;
-        private string selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+        private string selectedPathFiguresRootFolder;
         private FileSystemWatcher watcherDynamicPathFile;
         private FileSystemWatcher watcherFiguresFolders;
 
@@ -28,6 +28,11 @@ namespace FigurePreview
         {
             InitializeComponent();
             LoadConfigurationAndDisplayFigures();
+
+
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
+                return;
+
             WatchDynamicPathFileModifications();
             WatchFiguresFoldersModifications();
 
@@ -36,10 +41,13 @@ namespace FigurePreview
 
         public void LoadConfigurationAndDisplayFigures()
         {
+            if (!IsConfigurationValid())
+            {
+                ExitApplication();
+                return;
+            }
 
             InitializeFactories();
-
-            VerifyConfiguration();
 
             if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enable)
             {
@@ -57,11 +65,16 @@ namespace FigurePreview
             }
 
             DisplayFigures();
-            
+
         }
+
+
+
 
         public void WatchDynamicPathFileModifications()
         {
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
+                return;
             watcherDynamicPathFile = new FileSystemWatcher($"{FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory}");
             watcherDynamicPathFile.NotifyFilter = NotifyFilters.LastWrite;
             watcherDynamicPathFile.Filter = $"{FigureConfiguration.Instance.FigurePreview.DynamicPathFileName}";
@@ -71,6 +84,9 @@ namespace FigurePreview
 
         public void WatchFiguresFoldersModifications()
         {
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
+                return;
+
             watcherFiguresFolders = new FileSystemWatcher($"{selectedPathFiguresRootFolder}");
             watcherFiguresFolders.IncludeSubdirectories = true;
             watcherFiguresFolders.EnableRaisingEvents = true;
@@ -98,10 +114,11 @@ namespace FigurePreview
 
         public void UpdateUI2(bool setDynamicPath)
         {
-            if (setDynamicPath) {
+            if (setDynamicPath)
+            {
                 FigureConfiguration.Instance.SetPublicationDynamicPath();
             }
-            
+
             LoadConfigurationAndDisplayFigures();
             //WatchDynamicPathFileModifications();
         }
@@ -112,14 +129,14 @@ namespace FigurePreview
             webView2FigureView.Source = new Uri(defaultView);
         }
 
-      
+
         private void InitializeFactories()
         {
             figureItemFactory = new FigureItemFactory();
             htmlViewFactory = new HtmlViewFactory();
         }
 
-        private void VerifyConfiguration()
+        private bool IsConfigurationValid()
         {
             var errorMessage = "";
             try
@@ -127,12 +144,26 @@ namespace FigurePreview
                 if (!FigureConfiguration.Instance.IsConfigurationValid(out errorMessage))
                 {
                     MessageBox.Show(errorMessage, "Feil på konfigurasjonsfil");
+                    return false;
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.ToString(), "Feil på konfigurasjonsfil");
+                return false;
             }
+
+            return true;
+        }
+
+
+        private void ExitApplication()
+        {
+            watcherFiguresFolders?.Dispose();
+            watcherDynamicPathFile?.Dispose();
+
+            Application.ExitThread();
+            Application.Exit();
         }
 
         private void DisplayFigures()
