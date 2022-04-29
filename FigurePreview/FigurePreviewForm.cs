@@ -1,34 +1,134 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Serialization;
-using FigurePreview.Configuration;
+﻿using FigurePreview.Configuration;
 using FigurePreview.Factories;
 using FigurePreview.Models;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace FigurePreview
 {
     public partial class PreviewToolForm : Form
     {
+
+
+        //TODO
+        // Check config and add good excpetion message
+        // diable folder selecin if dynamic i true, otherwise keep it
+        // se till att lasta om sida och lägg till listener när folder dropdown ändras
+
         private FigureItemFactory figureItemFactory;
         private HtmlViewFactory htmlViewFactory;
-        private string selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+        private string selectedPathFiguresRootFolder;
+        private FileSystemWatcher watcherDynamicPathFile;
+        private FileSystemWatcher watcherFiguresFolders;
 
         public PreviewToolForm()
         {
             InitializeComponent();
-            InitializeFactories();
-            VerifyConfiguration();
-            DisplayFigures();
+            LoadConfigurationAndDisplayFigures();
+
+
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
+                return;
+
+            WatchDynamicPathFileModifications();
+            WatchFiguresFoldersModifications();
+
         }
+
+
+        public void LoadConfigurationAndDisplayFigures()
+        {
+            if (!IsConfigurationValid())
+            {
+                ExitApplication();
+                return;
+            }
+
+            InitializeFactories();
+
+            if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enable)
+            {
+
+                var startPath = FigureConfiguration.Instance.FigurePreview.StartPath;
+                var dynamicPublicationPath = FigureConfiguration.Instance.FigurePreview.PublicationDynamicPath?.Text;
+                buttonSelectFiguresFolder.Enabled = false;
+
+                selectedPathFiguresRootFolder = $"{startPath}\\{dynamicPublicationPath}";
+            }
+            else
+            {
+                buttonSelectFiguresFolder.Enabled = true;
+                selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+            }
+
+            DisplayFigures();
+
+        }
+
+
+
+
+        public void WatchDynamicPathFileModifications()
+        {
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
+                return;
+            watcherDynamicPathFile = new FileSystemWatcher($"{FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory}");
+            watcherDynamicPathFile.NotifyFilter = NotifyFilters.LastWrite;
+            watcherDynamicPathFile.Filter = $"{FigureConfiguration.Instance.FigurePreview.DynamicPathFileName}";
+            watcherDynamicPathFile.EnableRaisingEvents = true;
+            watcherDynamicPathFile.Changed += Watcher_DynamicPathFile;
+        }
+
+        public void WatchFiguresFoldersModifications()
+        {
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
+                return;
+
+            watcherFiguresFolders = new FileSystemWatcher($"{selectedPathFiguresRootFolder}");
+            watcherFiguresFolders.IncludeSubdirectories = true;
+            watcherFiguresFolders.EnableRaisingEvents = true;
+            watcherFiguresFolders.Changed += Watcher_WatchFiguresFolderModifications;
+            watcherFiguresFolders.Renamed += Watcher_WatchFiguresFolderModifications;
+            watcherFiguresFolders.Deleted += Watcher_WatchFiguresFolderModifications;
+            watcherFiguresFolders.Created += Watcher_WatchFiguresFolderModifications;
+        }
+
+        private void Watcher_WatchFiguresFolderModifications(object sender, FileSystemEventArgs e)
+        {
+            //watcher.Dispose();
+            Invoke(new UpdateUI(UpdateUI2), false);
+            WatchFiguresFoldersModifications();
+        }
+
+        private void Watcher_DynamicPathFile(object sender, FileSystemEventArgs e)
+        {
+            //watcher.Dispose();
+            Invoke(new UpdateUI(UpdateUI2), true);
+            WatchFiguresFoldersModifications();
+        }
+
+        public delegate void UpdateUI(bool update = false);
+
+        public void UpdateUI2(bool setDynamicPath)
+        {
+            if (setDynamicPath)
+            {
+                FigureConfiguration.Instance.SetPublicationDynamicPath();
+            }
+
+            LoadConfigurationAndDisplayFigures();
+            //WatchDynamicPathFileModifications();
+        }
+
+        private void SetDefaultView()
+        {
+            string defaultView = htmlViewFactory.GetDefaultView();
+            webView2FigureView.Source = new Uri(defaultView);
+        }
+
 
         private void InitializeFactories()
         {
@@ -36,7 +136,7 @@ namespace FigurePreview
             htmlViewFactory = new HtmlViewFactory();
         }
 
-        private void VerifyConfiguration()
+        private bool IsConfigurationValid()
         {
             var errorMessage = "";
             try
@@ -44,16 +144,32 @@ namespace FigurePreview
                 if (!FigureConfiguration.Instance.IsConfigurationValid(out errorMessage))
                 {
                     MessageBox.Show(errorMessage, "Feil på konfigurasjonsfil");
+                    return false;
                 }
             }
             catch (Exception exp)
             {
                 MessageBox.Show(exp.ToString(), "Feil på konfigurasjonsfil");
+                return false;
             }
+
+            return true;
+        }
+
+
+        private void ExitApplication()
+        {
+            watcherFiguresFolders?.Dispose();
+            watcherDynamicPathFile?.Dispose();
+
+            Application.ExitThread();
+            Application.Exit();
         }
 
         private void DisplayFigures()
         {
+            htmlViewFactory.CleanUpViewFiles();
+
             var list = figureItemFactory.GetDisplayItems(selectedPathFiguresRootFolder);
 
             listBoxDisplayItems.Items.Clear();
@@ -66,22 +182,20 @@ namespace FigurePreview
 
             lblFiguresRootInfo.Text = $"Figurer hentes fra mappe : {selectedPathFiguresRootFolder}";
 
-            htmlViewFactory.CleanUpViewFiles();
+            SetDefaultView();
+
         }
 
         private async void PreviewToolForm_Load(object sender, EventArgs e)
         {
-            
-            
             await InitializeAsync();
-            
+
             if ((webView2FigureView == null) || (webView2FigureView.CoreWebView2 == null))
             {
                 Debug.WriteLine("webview not ready");
             }
 
-            webView2FigureView.Source = new Uri(Directory.GetCurrentDirectory() + $"\\htmlview\\view\\default.htm");
-
+            //webView2FigureView.Source = new Uri(Directory.GetCurrentDirectory() + $"\\htmlview\\view\\default.htm");
         }
 
         private async Task InitializeAsync()
@@ -98,7 +212,6 @@ namespace FigurePreview
                 var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem);
                 webView2FigureView.Source = new Uri(viewPath);
             }
-
         }
 
         private void buttonSelectFiguresFolder_Click(object sender, EventArgs e)
@@ -113,6 +226,7 @@ namespace FigurePreview
             if (result == DialogResult.OK)
             {
                 selectedPathFiguresRootFolder = folderDlg.SelectedPath;
+
                 DisplayFigures();
             }
         }
