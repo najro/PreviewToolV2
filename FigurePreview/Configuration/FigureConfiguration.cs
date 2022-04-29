@@ -16,7 +16,7 @@ namespace FigurePreview.Configuration
         {
             SetFigurePreview();
 
-            if (FigurePreview.DynamicPathFile.Enable)
+            if (FigurePreview.DynamicPathFile.Enabled)
             {
                 SetPublicationDynamicPath();
             }
@@ -47,6 +47,8 @@ namespace FigurePreview.Configuration
                 var deserializer = new XmlSerializer(typeof(FigurePreview));
                 var inStream = new FileStream(GetConfigurationFilePath(), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 _figurePreview = (FigurePreview)deserializer.Deserialize(inStream);
+                inStream.Close();
+                inStream.Dispose();
             }
             catch (Exception exp)
             {
@@ -59,9 +61,14 @@ namespace FigurePreview.Configuration
         {
             try
             {
-                var inStream = new FileStream(_figurePreview.DynamicPathFile.Text, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                var inStream = new FileStream(_figurePreview.DynamicPathFile.Text, FileMode.Open,
+                    FileAccess.Read, FileShare.ReadWrite);
+
                 var deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
                 _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(inStream);
+                inStream.Close();
+                inStream.Dispose();
+
             }
             catch (Exception exp)
             {
@@ -99,7 +106,7 @@ namespace FigurePreview.Configuration
             }
             else
             {
-                if (FigurePreview.DynamicPathFile.Enable)
+                if (FigurePreview.DynamicPathFile.Enabled)
                 {
                     if (string.IsNullOrEmpty(FigurePreview.DynamicPathFile.Text))
                     {
@@ -109,7 +116,8 @@ namespace FigurePreview.Configuration
                     if (FigurePreview.PublicationDynamicPath == null)
                     {
                         error.Append("Det savnes informasjon for dynamisk pathDynamicPathFile XML fil");
-                    }else if (string.IsNullOrEmpty(FigurePreview.PublicationDynamicPath.Text))
+                    }
+                    else if (string.IsNullOrEmpty(FigurePreview.PublicationDynamicPath.Text))
                     {
                         error.Append("Det savnes informasjon i PublicationDynamicPath XML");
                     }

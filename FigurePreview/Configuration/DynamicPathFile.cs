@@ -7,7 +7,7 @@ namespace FigurePreview.Configuration
     {
 
         [XmlAttribute(AttributeName = "enable")]
-        public bool Enable { get; set; }
+        public bool Enabled { get; set; }
 
         [XmlText]
         public string Text { get; set; }
