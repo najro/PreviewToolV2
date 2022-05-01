@@ -29,9 +29,13 @@ namespace FigurePreview
         {
             InitializeComponent();
             ResetErrorMessage();
-            LoadConfigurationAndDisplayFigures();
-            WatchDynamicPathFileModifications();
+            LoadConfigurationAndDisplayFigures();           
             WatchFiguresFoldersModifications();
+
+            if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enabled)
+            {
+                WatchDynamicPathFileModifications();
+            }
         }
 
         public void ResetErrorMessage()
@@ -44,8 +48,7 @@ namespace FigurePreview
             DisableViewComponents();
             var displayError = $"Det har skjedd en feil!\n{errorMessage}";
             lblError.Visible = true;
-            lblError.Text = displayError;
-            //lblError.Width = 2000;
+            lblError.Text = displayError;            
         }
 
         public void DisableViewComponents()
@@ -149,10 +152,10 @@ namespace FigurePreview
         }
 
         private void Watcher_WatchFiguresFolderModifications(object sender, FileSystemEventArgs e)
-        {
-            //watcher.Dispose();
+        {            
+            watcherFiguresFolders.EnableRaisingEvents = false;
             Invoke(new UpdateUI(UpdateUIView), false);
-            WatchFiguresFoldersModifications();
+            watcherFiguresFolders.EnableRaisingEvents = true;         
         }
 
         private void Watcher_DynamicPathFile(object sender, FileSystemEventArgs e)
@@ -164,15 +167,13 @@ namespace FigurePreview
         public delegate void UpdateUI(bool update = false);
 
         public void UpdateUIView(bool setDynamicPath)
-        {
+        {  
             if (setDynamicPath)
             {
                 FigureConfiguration.Instance.SetPublicationDynamicPath();
             }
 
             LoadConfigurationAndDisplayFigures();
-            //WatchFiguresFoldersModifications();
-            //WatchDynamicPathFileModifications();
         }
 
         private void SetDefaultView()
@@ -188,47 +189,15 @@ namespace FigurePreview
             htmlViewFactory = new HtmlViewFactory();
         }
 
-        //private void DisplayError(string errorMessage)
-        //{
-        //    MessageBox.Show(errorMessage, "error");
-        //}
-
-        //private bool IsConfigurationValid()
-        //{
-        //    var errorMessage = "";
-        //    try
-        //    {
-        //        if (!FigureConfiguration.Instance.IsConfigurationValid(out errorMessage))
-        //        {
-        //            MessageBox.Show(errorMessage, "Feil på konfigurasjonsfil");
-        //            return false;
-        //        }
-        //    }
-        //    catch (Exception exp)
-        //    {
-        //        MessageBox.Show(exp.ToString(), "Feil på konfigurasjonsfil");
-        //        return false;
-        //    }
-
-        //    return true;
-        //}
-
-
-        //private void ExitApplication()
-        //{
-        //    watcherFiguresFolders?.Dispose();
-        //    watcherDynamicPathFile?.Dispose();
-
-        //    Application.ExitThread();
-        //    Application.Exit();
-        //}
-
         private void DisplayFigures()
         {
+            // Delete all html files
             htmlViewFactory.CleanUpViewFiles();
 
+            // get unique list of figures to display
             var list = figureItemFactory.GetDisplayItems(selectedPathFiguresRootFolder);
 
+            // clear figure displaylist  and add unique list of figures
             listBoxDisplayItems.Items.Clear();
             listBoxDisplayItems.DisplayMember = "Name";
 
@@ -237,38 +206,44 @@ namespace FigurePreview
                 listBoxDisplayItems.Items.Add(displayItem);
             }
 
+            // set information from where figures are collected
             lblFiguresRootInfo.Text = $"Figurer hentes fra mappe : {selectedPathFiguresRootFolder}";
+
+
+
+            FigureItem selectedFigureItem = null;
 
             if (!string.IsNullOrWhiteSpace(selectedDisplayName))
             {
                 foreach (FigureItem figureItem in listBoxDisplayItems.Items)
-                {
-                    
+                {                    
                     if (figureItem.Name.Equals(selectedDisplayName))
                     {
-                        //listBoxDisplayItems.SelectedItem = figureItem;
-                        CreateAndDisplayHtmlFigure(figureItem);
-                        ReloadHtmlView();
-                        return;
-                    }
-                   
+                        selectedFigureItem = figureItem;
+                        break;                                            
+                    }                    
                 }
             }
-            
-            SetDefaultView();
 
+            if (selectedFigureItem != null)
+            {
+                listBoxDisplayItems.SelectedItem = selectedFigureItem;
+                ReloadHtmlView();
+            }
+            else
+            {
+                SetDefaultView();
+            }
+                        
         }
 
         private async void PreviewToolForm_Load(object sender, EventArgs e)
         {
             await InitializeAsync();
-
             if ((webView2FigureView == null) || (webView2FigureView.CoreWebView2 == null))
             {
                 Debug.WriteLine("webview not ready");
-            }
-
-            //webView2FigureView.Source = new Uri(Directory.GetCurrentDirectory() + $"\\htmlview\\view\\default.htm");
+            }            
         }
 
         private async Task InitializeAsync()
@@ -290,7 +265,7 @@ namespace FigurePreview
         private void CreateAndDisplayHtmlFigure(FigureItem displayItem)
         {
             selectedDisplayName = displayItem.Name;
-            var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem);
+            var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem);            
             webView2FigureView.Source = new Uri(viewPath);
         }
 
@@ -320,10 +295,6 @@ namespace FigurePreview
         {
             webView2FigureView.Reload();
         }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
+        
     }
 }
