@@ -15,7 +15,6 @@ namespace FigurePreview.Factories
             var figures = FigureConfiguration.Instance.FigurePreview.Figure;
             var htmlContent = new StringBuilder();
 
-
             htmlContent.AppendLine("<div class=\"figures\">");
 
             foreach (var figure in figures)
@@ -23,7 +22,6 @@ namespace FigurePreview.Factories
                 htmlContent.AppendLine("<div class=\"figure\">");
 
                 htmlContent.Append($"<h2>{figure.Name}</h2>");
-
 
                 if (displayFigureItem.HasNotValidFigureExtensions(figure))
                 {
@@ -170,7 +168,6 @@ namespace FigurePreview.Factories
 
                 file.Delete();
             }
-
         }
     }
 }

@@ -50,10 +50,9 @@ namespace FigurePreview.Configuration
                 inStream.Close();
                 inStream.Dispose();
             }
-            catch (Exception exp)
+            catch
             {
-                _figurePreview = null;
-                //throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
+                _figurePreview = null;             
             }
         }
 
@@ -86,10 +85,9 @@ namespace FigurePreview.Configuration
                     File.Delete(tmpFileName);
                 }
             }
-            catch (Exception exp)
+            catch
             {
-                _figurePreview.PublicationDynamicPath = null;
-                //throw new NotSupportedException($"Problem med XML fil {GetConfigurationFilePath()} : {exp.ToString()}");
+                _figurePreview.PublicationDynamicPath = null;                
             }
         }
 

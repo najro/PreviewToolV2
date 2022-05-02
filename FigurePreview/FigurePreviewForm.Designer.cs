@@ -35,8 +35,7 @@ namespace FigurePreview
             this.webView2FigureView = new Microsoft.Web.WebView2.WinForms.WebView2();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.buttonSelectFiguresFolder = new System.Windows.Forms.Button();
-            this.buttonRefreshHtml = new System.Windows.Forms.Button();
-            this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.buttonRefreshHtml = new System.Windows.Forms.Button();            
             this.lblError = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.webView2FigureView)).BeginInit();
             this.SuspendLayout();
@@ -137,8 +136,7 @@ namespace FigurePreview
         private Microsoft.Web.WebView2.WinForms.WebView2 webView2FigureView;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         private System.Windows.Forms.Button buttonSelectFiguresFolder;
-        private System.Windows.Forms.Button buttonRefreshHtml;
-        private System.Windows.Forms.ColorDialog colorDialog1;
+        private System.Windows.Forms.Button buttonRefreshHtml;        
         private System.Windows.Forms.Label lblError;
     }
 }

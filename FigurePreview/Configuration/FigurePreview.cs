@@ -4,7 +4,6 @@ using System.Xml.Serialization;
 
 namespace FigurePreview.Configuration
 {
-
     [XmlRoot(ElementName = "FigurePreview")]
     public class FigurePreview
     {
