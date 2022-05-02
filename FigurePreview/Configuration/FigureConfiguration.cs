@@ -61,14 +61,30 @@ namespace FigurePreview.Configuration
         {
             try
             {
-                var inStream = new FileStream(_figurePreview.DynamicPathFile.Text, FileMode.Open,
-                    FileAccess.Read, FileShare.ReadWrite);
+                var fileName = _figurePreview.DynamicPathFile.Text; ;
 
-                var deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
-                _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(inStream);
-                inStream.Close();
-                inStream.Dispose();
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    _figurePreview.PublicationDynamicPath = null;
+                }
+                else
+                {
+                    // try to avoid issues during read XML file from multiple threads. Copy to temp file
+                    Random rnd = new Random();
+                    var fileDirectory = Path.GetDirectoryName(fileName);
+                    var fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
+                    var fileExtension = Path.GetExtension(fileName);
+                    var tmpFileName = $"{fileDirectory}\\{fileNameWithoutExt}_tmp_{rnd.Next()}{fileExtension}";
+                    
+                    File.Copy(fileName, tmpFileName);
 
+                    var inStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
+                    var deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
+                    _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(inStream);
+                    inStream.Dispose();
+                    File.Delete(tmpFileName);
+                }
             }
             catch (Exception exp)
             {
@@ -77,7 +93,7 @@ namespace FigurePreview.Configuration
             }
         }
 
-        // add logic for DynamicPathFile
+
         public bool IsConfigurationValid(out string errorMessage)
         {
             var validConfiguration = true;
@@ -85,15 +101,15 @@ namespace FigurePreview.Configuration
 
             if (FigurePreview == null)
             {
-                error.Append("Problem med å opprette en konfigurasjon fra XML, sjekk filen!");
+                error.Append($"Problem med å opprette en konfigurasjon fra XML ({FigureConfigurationFile})");
             }
 
             if (string.IsNullOrEmpty(FigurePreview?.StartPath))
             {
-                error.Append("startpath er tom i XML fil");
+                error.Append($"startpath er tom i XML ({FigureConfigurationFile})");
             }
 
-            // Is not in use
+            // Is not in use for now
             //if (string.IsNullOrEmpty(FigurePreview?.PathRoule))
             //{
             //    error.Append("PathRoule er tom i XML fil");
@@ -102,7 +118,7 @@ namespace FigurePreview.Configuration
 
             if (FigurePreview?.DynamicPathFile == null)
             {
-                error.Append("DynamicPathFile er tom i XML fil");
+                error.Append($"DynamicPathFile er tom i XML ({FigureConfigurationFile})");
             }
             else
             {
@@ -110,24 +126,23 @@ namespace FigurePreview.Configuration
                 {
                     if (string.IsNullOrEmpty(FigurePreview.DynamicPathFile.Text))
                     {
-                        error.Append("Det savnes informasjon i DynamicPathFile XML");
+                        error.Append($"Det savnes informasjon i DynamicPathFile XML ({FigureConfigurationFile})");
                     }
 
                     if (FigurePreview.PublicationDynamicPath == null)
                     {
-                        error.Append("Det savnes informasjon for dynamisk pathDynamicPathFile XML fil");
+                        error.Append($"Det savnes informasjon fra fil som er definert i DynamicPathFile i XML ({FigureConfigurationFile})");
                     }
                     else if (string.IsNullOrEmpty(FigurePreview.PublicationDynamicPath.Text))
                     {
-                        error.Append("Det savnes informasjon i PublicationDynamicPath XML");
+                        error.Append($"Det savnes informasjon i XML fil som er referet fra PublicationDynamicPath i XML ({FigureConfigurationFile})");
                     }
-
                 }
             }
 
             if (FigurePreview?.Figure == null || !FigurePreview.Figure.Any())
             {
-                error.Append("Det savnes Figure elementer i XML fil");
+                error.Append($"Det savnes Figure elementer i XML ({FigureConfigurationFile})");
             }
             else
             {
@@ -135,27 +150,27 @@ namespace FigurePreview.Configuration
                 {
                     if (string.IsNullOrEmpty(figure.Name))
                     {
-                        error.Append("Name er tom i Figure element");
+                        error.Append($"Name er tom i Figure element i XML ({FigureConfigurationFile})");
                     }
 
                     if (string.IsNullOrEmpty(figure.FormatPath))
                     {
-                        error.Append("FormatPath er tom i Figure element");
+                        error.Append($"FormatPath er tom i Figure element i XML ({FigureConfigurationFile})");
                     }
 
                     if (figure.Extentions == null)
                     {
-                        error.Append("Det savnes Extentions elementer i XML fil");
+                        error.Append($"Det savnes Extentions elementer i XML ({FigureConfigurationFile})");
                     }
                     else if (!figure.Extentions.Ext.Any())
                     {
-                        error.Append("Det savnes Ext elementer i XML fil");
+                        error.Append($"Det savnes Ext elementer i XML ({FigureConfigurationFile})");
                     }
                     else
                     {
                         foreach (var ext in figure.Extentions.Ext.Where(string.IsNullOrWhiteSpace))
                         {
-                            error.Append("Ext er tom i Extentions element");
+                            error.Append($"Ext er tom i Extentions element i XML ({FigureConfigurationFile})");
                         }
                     }
                 }

@@ -14,8 +14,8 @@ namespace FigurePreview.Configuration
         [XmlElement(ElementName = "DynamicPathFile")]
         public DynamicPathFile DynamicPathFile;
 
-        [XmlElement(ElementName = "PathRoule")]
-        public string PathRoule;
+        //[XmlElement(ElementName = "PathRoule")]
+        //public string PathRoule;
 
         [XmlElement(ElementName = "Figure")]
         public List<Figure> Figure;

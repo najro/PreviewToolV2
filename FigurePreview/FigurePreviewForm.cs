@@ -20,10 +20,12 @@ namespace FigurePreview
 
         private FigureItemFactory figureItemFactory;
         private HtmlViewFactory htmlViewFactory;
-        private string selectedPathFiguresRootFolder;
+        
         private FileSystemWatcher watcherDynamicPathFile;
         private FileSystemWatcher watcherFiguresFolders;
+        
         private string selectedDisplayName = "";
+        private string selectedPathFiguresRootFolder;
 
         public PreviewToolForm()
         {
@@ -46,15 +48,13 @@ namespace FigurePreview
         public void DisplayError(string errorMessage)
         {
             DisableViewComponents();
-            var displayError = $"Det har skjedd en feil!\n{errorMessage}";
+            var displayError = $"Det har skjedd en feil! {errorMessage}";
             lblError.Visible = true;
             lblError.Text = displayError;            
         }
 
         public void DisableViewComponents()
         {
-            //watcherFiguresFolders?.Dispose();
-            //watcherDynamicPathFile?.Dispose();
             lblFiguresRootInfo.Enabled = false;
             listBoxDisplayItems.Enabled = false;
             buttonRefreshHtml.Enabled = false;
@@ -142,6 +142,7 @@ namespace FigurePreview
                 return;
             }
 
+            watcherFiguresFolders?.Dispose();
             watcherFiguresFolders = new FileSystemWatcher($"{selectedPathFiguresRootFolder}");
             watcherFiguresFolders.IncludeSubdirectories = true;
             watcherFiguresFolders.EnableRaisingEvents = true;
@@ -160,8 +161,10 @@ namespace FigurePreview
 
         private void Watcher_DynamicPathFile(object sender, FileSystemEventArgs e)
         {
+            watcherDynamicPathFile.EnableRaisingEvents = false;
             Invoke(new UpdateUI(UpdateUIView), true);
             WatchFiguresFoldersModifications();
+            watcherDynamicPathFile.EnableRaisingEvents = true;
         }
 
         public delegate void UpdateUI(bool update = false);
