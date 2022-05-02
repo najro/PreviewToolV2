@@ -62,6 +62,7 @@ namespace FigurePreview.Factories
                     }
                 }
             }
+
             return figureItems.OrderBy(o => o.Name).ToList();
         }
     }
