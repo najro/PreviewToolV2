@@ -90,32 +90,28 @@ namespace FigurePreview
             else
             {
                 buttonSelectFiguresFolder.Enabled = true;
-                selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+
+                if (string.IsNullOrEmpty(selectedPathFiguresRootFolder))
+                {
+                    selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+                }                
             }
 
             DisplayFigures();
 
         }
 
-
-
-
         public void WatchDynamicPathFileModifications()
         {
             if (!FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
-            {
-                //watcherDynamicPathFile?.Dispose();
-                //DisplayError(errorMessage);
+            {                
                 return;
             }
 
             var dynamicPathDirectory = FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory;
 
             if (dynamicPathDirectory == null || string.IsNullOrWhiteSpace(dynamicPathDirectory) || !Directory.Exists(dynamicPathDirectory))
-            {
-
-                //watcherDynamicPathFile?.Dispose();
-                //DisplayError(errorMessage);
+            {                
                 return;
             }
                 
@@ -129,16 +125,12 @@ namespace FigurePreview
         public void WatchFiguresFoldersModifications()
         {
             if (!FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
-            {
-                //watcherFiguresFolders?.Dispose();
-                //DisplayError(errorMessage);
+            {                
                 return;
             }
 
             if (selectedPathFiguresRootFolder == null || string.IsNullOrWhiteSpace(selectedPathFiguresRootFolder) || !Directory.Exists(selectedPathFiguresRootFolder))
-            {
-                //watcherFiguresFolders?.Dispose();
-                //DisplayError($"Problem med valgt mappe: {selectedPathFiguresRootFolder}");
+            {             
                 return;
             }
 
@@ -209,10 +201,8 @@ namespace FigurePreview
                 listBoxDisplayItems.Items.Add(displayItem);
             }
 
-            // set information from where figures are collected
+            // set and display information from where figures are collected
             lblFiguresRootInfo.Text = $"Figurer hentes fra mappe : {selectedPathFiguresRootFolder}";
-
-
 
             FigureItem selectedFigureItem = null;
 
@@ -228,6 +218,8 @@ namespace FigurePreview
                 }
             }
 
+            // check if selected figure is already set, then try to pre selected this view
+            // this might occur when any changes of files in figure folder
             if (selectedFigureItem != null)
             {
                 listBoxDisplayItems.SelectedItem = selectedFigureItem;
@@ -236,8 +228,7 @@ namespace FigurePreview
             else
             {
                 SetDefaultView();
-            }
-                        
+            }                        
         }
 
         private async void PreviewToolForm_Load(object sender, EventArgs e)
@@ -260,8 +251,7 @@ namespace FigurePreview
             if (listBoxDisplayItems.SelectedItem != null)
             {
                 var displayItem = (FigureItem)listBoxDisplayItems.SelectedItem;
-                CreateAndDisplayHtmlFigure(displayItem);
-                //ReloadHtmlView();
+                CreateAndDisplayHtmlFigure(displayItem);                
             }
         }
 
@@ -283,9 +273,9 @@ namespace FigurePreview
             DialogResult result = folderDlg.ShowDialog();
             if (result == DialogResult.OK)
             {
-                selectedPathFiguresRootFolder = folderDlg.SelectedPath;
-
+                selectedPathFiguresRootFolder = folderDlg.SelectedPath;                
                 DisplayFigures();
+                WatchFiguresFoldersModifications();
             }
         }
 
