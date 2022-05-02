@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace FigurePreview.Configuration
@@ -69,6 +70,7 @@ namespace FigurePreview.Configuration
                 else
                 {
                     // try to avoid issues during read XML file from multiple threads. Copy to temp file
+                    Thread.Sleep(1000);
                     Random rnd = new Random();
                     var fileDirectory = Path.GetDirectoryName(fileName);
                     var fileNameWithoutExt = Path.GetFileNameWithoutExtension(fileName);
@@ -77,12 +79,12 @@ namespace FigurePreview.Configuration
                     
                     File.Copy(fileName, tmpFileName);
 
-                    var inStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    var inStream = new FileStream(tmpFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
                     var deserializer = new XmlSerializer(typeof(PublicationDynamicPath));
                     _figurePreview.PublicationDynamicPath = (PublicationDynamicPath)deserializer.Deserialize(inStream);
                     inStream.Dispose();
-                    File.Delete(tmpFileName);
+                    File.Delete(tmpFileName);                    
                 }
             }
             catch
