@@ -11,20 +11,13 @@ namespace FigurePreview
 {
     public partial class PreviewToolForm : Form
     {
-
-
-        //TODO
-        // Check config and add good excpetion message
-        // diable folder selecin if dynamic i true, otherwise keep it
-        // se till att lasta om sida och lägg till listener när folder dropdown ändras
-
         private FigureItemFactory figureItemFactory;
         private HtmlViewFactory htmlViewFactory;
         
         private FileSystemWatcher watcherDynamicPathFile;
         private FileSystemWatcher watcherFiguresFolders;
         
-        private string selectedDisplayName = "";
+        private string selectedDisplayName;
         private string selectedPathFiguresRootFolder;
 
         public PreviewToolForm()
@@ -42,6 +35,7 @@ namespace FigurePreview
 
         public void ResetErrorMessage()
         {
+            lblError.Text = "";
             lblError.Visible = false;
         }
 
@@ -61,7 +55,14 @@ namespace FigurePreview
             webView2FigureView.Enabled = false;
         }
 
-
+        public void EnableViewComponents()
+        {
+            lblFiguresRootInfo.Enabled = true;
+            listBoxDisplayItems.Enabled = true;
+            buttonRefreshHtml.Enabled = true;
+            webView2FigureView.Enabled = true;            
+            lblError.Visible = false;
+        }
 
         public void LoadConfigurationAndDisplayFigures()
         {
@@ -72,6 +73,8 @@ namespace FigurePreview
             }
 
             InitializeFactories();
+            ResetErrorMessage();
+            EnableViewComponents();
 
             if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enabled)
             {
@@ -96,9 +99,7 @@ namespace FigurePreview
                     selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
                 }                
             }
-
             DisplayFigures();
-
         }
 
         public void WatchDynamicPathFileModifications()
@@ -165,6 +166,7 @@ namespace FigurePreview
         {  
             if (setDynamicPath)
             {
+                selectedDisplayName = string.Empty;
                 FigureConfiguration.Instance.SetPublicationDynamicPath();
             }
 
@@ -177,7 +179,6 @@ namespace FigurePreview
             webView2FigureView.Source = new Uri(defaultView);
         }
 
-
         private void InitializeFactories()
         {
             figureItemFactory = new FigureItemFactory();
@@ -186,6 +187,12 @@ namespace FigurePreview
 
         private void DisplayFigures()
         {
+            // verify that selectedPathFiguresRootFolder exists
+            if (selectedPathFiguresRootFolder == null || string.IsNullOrWhiteSpace(selectedPathFiguresRootFolder) || !Directory.Exists(selectedPathFiguresRootFolder))
+            {
+                return;
+            }
+
             // Delete all html files
             htmlViewFactory.CleanUpViewFiles();
 
@@ -245,7 +252,6 @@ namespace FigurePreview
             await webView2FigureView.EnsureCoreWebView2Async(null);
         }
 
-
         private void listBoxDisplayItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBoxDisplayItems.SelectedItem != null)
@@ -287,7 +293,6 @@ namespace FigurePreview
         private void ReloadHtmlView()
         {
             webView2FigureView.Reload();
-        }
-        
+        }        
     }
 }
