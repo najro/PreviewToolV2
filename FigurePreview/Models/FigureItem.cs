@@ -24,7 +24,6 @@ namespace FigurePreview.Models
             set;
         }
 
-
         public void AddFigureInfo(FigureInfo figure)
         {
             _figureInfoList.Add(figure);
