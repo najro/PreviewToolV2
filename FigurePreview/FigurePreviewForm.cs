@@ -202,7 +202,7 @@ namespace FigurePreview
             }
 
             // set and display information from where figures are collected
-            lblFiguresRootInfo.Text = $"Figurer hentes fra mappe : {selectedPathFiguresRootFolder}";
+            lblFiguresRootInfo.Text = $"Figurer hentes fra mappe:\n{selectedPathFiguresRootFolder}";
 
             FigureItem selectedFigureItem = null;
 
