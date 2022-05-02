@@ -24,7 +24,7 @@ namespace FigurePreview
         {
             InitializeComponent();
             ResetErrorMessage();
-            LoadConfigurationAndDisplayFigures();           
+            VerifyConfigurationAndDisplayFigures();           
             WatchFiguresFoldersModifications();
 
             if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enabled)
@@ -32,39 +32,8 @@ namespace FigurePreview
                 WatchDynamicPathFileModifications();
             }
         }
-
-        public void ResetErrorMessage()
-        {
-            lblError.Text = "";
-            lblError.Visible = false;
-        }
-
-        public void DisplayError(string errorMessage)
-        {
-            DisableViewComponents();
-            var displayError = $"Det har skjedd en feil! {errorMessage}";
-            lblError.Visible = true;
-            lblError.Text = displayError;            
-        }
-
-        public void DisableViewComponents()
-        {
-            lblFiguresRootInfo.Enabled = false;
-            listBoxDisplayItems.Enabled = false;
-            buttonRefreshHtml.Enabled = false;
-            webView2FigureView.Enabled = false;
-        }
-
-        public void EnableViewComponents()
-        {
-            lblFiguresRootInfo.Enabled = true;
-            listBoxDisplayItems.Enabled = true;
-            buttonRefreshHtml.Enabled = true;
-            webView2FigureView.Enabled = true;            
-            lblError.Visible = false;
-        }
-
-        public void LoadConfigurationAndDisplayFigures()
+        
+        public void VerifyConfigurationAndDisplayFigures()
         {
             if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
             {
@@ -75,116 +44,10 @@ namespace FigurePreview
             InitializeFactories();
             ResetErrorMessage();
             EnableViewComponents();
-
-            if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enabled)
-            {
-
-                var startPath = FigureConfiguration.Instance.FigurePreview.StartPath;
-                var dynamicPublicationPath = FigureConfiguration.Instance.FigurePreview.PublicationDynamicPath?.Text;
-                buttonSelectFiguresFolder.Enabled = false;
-                selectedPathFiguresRootFolder = $"{startPath}\\{dynamicPublicationPath}";
-
-                if (!Directory.Exists(selectedPathFiguresRootFolder))
-                {
-                    DisplayError($"Root mappe {selectedPathFiguresRootFolder} finnes ikke");
-                    return;
-                }
-            }
-            else
-            {
-                buttonSelectFiguresFolder.Enabled = true;
-
-                if (string.IsNullOrEmpty(selectedPathFiguresRootFolder))
-                {
-                    selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
-                }                
-            }
+            SetInitalSelectedPathFigureRootFolder();
             DisplayFigures();
         }
-
-        public void WatchDynamicPathFileModifications()
-        {
-            if (!FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
-            {                
-                return;
-            }
-
-            var dynamicPathDirectory = FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory;
-
-            if (dynamicPathDirectory == null || string.IsNullOrWhiteSpace(dynamicPathDirectory) || !Directory.Exists(dynamicPathDirectory))
-            {                
-                return;
-            }
-                
-            watcherDynamicPathFile = new FileSystemWatcher($"{dynamicPathDirectory}");
-            watcherDynamicPathFile.NotifyFilter = NotifyFilters.LastWrite;
-            watcherDynamicPathFile.Filter = $"{FigureConfiguration.Instance.FigurePreview.DynamicPathFileName}";
-            watcherDynamicPathFile.EnableRaisingEvents = true;
-            watcherDynamicPathFile.Changed += Watcher_DynamicPathFile;
-        }
-
-        public void WatchFiguresFoldersModifications()
-        {
-            if (!FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
-            {                
-                return;
-            }
-
-            if (selectedPathFiguresRootFolder == null || string.IsNullOrWhiteSpace(selectedPathFiguresRootFolder) || !Directory.Exists(selectedPathFiguresRootFolder))
-            {             
-                return;
-            }
-
-            watcherFiguresFolders?.Dispose();
-            watcherFiguresFolders = new FileSystemWatcher($"{selectedPathFiguresRootFolder}");
-            watcherFiguresFolders.IncludeSubdirectories = true;
-            watcherFiguresFolders.EnableRaisingEvents = true;
-            watcherFiguresFolders.Changed += Watcher_WatchFiguresFolderModifications;
-            watcherFiguresFolders.Renamed += Watcher_WatchFiguresFolderModifications;
-            watcherFiguresFolders.Deleted += Watcher_WatchFiguresFolderModifications;
-            watcherFiguresFolders.Created += Watcher_WatchFiguresFolderModifications;
-        }
-
-        private void Watcher_WatchFiguresFolderModifications(object sender, FileSystemEventArgs e)
-        {            
-            watcherFiguresFolders.EnableRaisingEvents = false;
-            Invoke(new UpdateUI(UpdateUIView), false);
-            watcherFiguresFolders.EnableRaisingEvents = true;         
-        }
-
-        private void Watcher_DynamicPathFile(object sender, FileSystemEventArgs e)
-        {
-            watcherDynamicPathFile.EnableRaisingEvents = false;
-            Invoke(new UpdateUI(UpdateUIView), true);
-            WatchFiguresFoldersModifications();
-            watcherDynamicPathFile.EnableRaisingEvents = true;
-        }
-
-        public delegate void UpdateUI(bool update = false);
-
-        public void UpdateUIView(bool setDynamicPath)
-        {  
-            if (setDynamicPath)
-            {
-                selectedDisplayName = string.Empty;
-                FigureConfiguration.Instance.SetPublicationDynamicPath();
-            }
-
-            LoadConfigurationAndDisplayFigures();
-        }
-
-        private void SetDefaultView()
-        {
-            string defaultView = htmlViewFactory.GetDefaultView();
-            webView2FigureView.Source = new Uri(defaultView);
-        }
-
-        private void InitializeFactories()
-        {
-            figureItemFactory = new FigureItemFactory();
-            htmlViewFactory = new HtmlViewFactory();
-        }
-
+          
         private void DisplayFigures()
         {
             // verify that selectedPathFiguresRootFolder exists
@@ -238,35 +101,91 @@ namespace FigurePreview
             }                        
         }
 
-        private async void PreviewToolForm_Load(object sender, EventArgs e)
+
+        #region watch dynamic xml file and figures folder for any modifications
+        public void WatchDynamicPathFileModifications()
         {
-            await InitializeAsync();
-            if ((webView2FigureView == null) || (webView2FigureView.CoreWebView2 == null))
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
             {
-                Debug.WriteLine("webview not ready");
-            }            
+                return;
+            }
+
+            var dynamicPathDirectory = FigureConfiguration.Instance.FigurePreview.DynamicPathDirectory;
+
+            if (dynamicPathDirectory == null || string.IsNullOrWhiteSpace(dynamicPathDirectory) || !Directory.Exists(dynamicPathDirectory))
+            {
+                return;
+            }
+
+            watcherDynamicPathFile = new FileSystemWatcher($"{dynamicPathDirectory}");
+            watcherDynamicPathFile.NotifyFilter = NotifyFilters.LastWrite;
+            watcherDynamicPathFile.Filter = $"{FigureConfiguration.Instance.FigurePreview.DynamicPathFileName}";
+            watcherDynamicPathFile.EnableRaisingEvents = true;
+            watcherDynamicPathFile.Changed += Watcher_DynamicPathFile;
         }
 
-        private async Task InitializeAsync()
+        public void WatchFiguresFoldersModifications()
         {
-            await webView2FigureView.EnsureCoreWebView2Async(null);
+            if (!FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
+            {
+                return;
+            }
+
+            if (selectedPathFiguresRootFolder == null || string.IsNullOrWhiteSpace(selectedPathFiguresRootFolder) || !Directory.Exists(selectedPathFiguresRootFolder))
+            {
+                return;
+            }
+
+            watcherFiguresFolders?.Dispose();
+            watcherFiguresFolders = new FileSystemWatcher($"{selectedPathFiguresRootFolder}");
+            watcherFiguresFolders.IncludeSubdirectories = true;
+            watcherFiguresFolders.EnableRaisingEvents = true;
+            watcherFiguresFolders.Changed += Watcher_WatchFiguresFolderModifications;
+            watcherFiguresFolders.Renamed += Watcher_WatchFiguresFolderModifications;
+            watcherFiguresFolders.Deleted += Watcher_WatchFiguresFolderModifications;
+            watcherFiguresFolders.Created += Watcher_WatchFiguresFolderModifications;
         }
 
+        private void Watcher_WatchFiguresFolderModifications(object sender, FileSystemEventArgs e)
+        {
+            watcherFiguresFolders.EnableRaisingEvents = false;
+            Invoke(new UpdateUI(UpdateUIView), false);
+            watcherFiguresFolders.EnableRaisingEvents = true;
+        }
+
+        private void Watcher_DynamicPathFile(object sender, FileSystemEventArgs e)
+        {
+            watcherDynamicPathFile.EnableRaisingEvents = false;
+            Invoke(new UpdateUI(UpdateUIView), true);
+            WatchFiguresFoldersModifications();
+            watcherDynamicPathFile.EnableRaisingEvents = true;
+        }
+
+        public delegate void UpdateUI(bool update = false);
+
+        public void UpdateUIView(bool setDynamicPath)
+        {
+            if (setDynamicPath)
+            {
+                selectedDisplayName = string.Empty;
+                FigureConfiguration.Instance.SetPublicationDynamicPath();
+            }
+
+            VerifyConfigurationAndDisplayFigures();
+        }
+        #endregion
+
+        #region button and selected figures operations
         private void listBoxDisplayItems_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (listBoxDisplayItems.SelectedItem != null)
             {
                 var displayItem = (FigureItem)listBoxDisplayItems.SelectedItem;
-                CreateAndDisplayHtmlFigure(displayItem);                
+                CreateAndDisplayHtmlFigure(displayItem);
             }
         }
 
-        private void CreateAndDisplayHtmlFigure(FigureItem displayItem)
-        {
-            selectedDisplayName = displayItem.Name;
-            var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem);            
-            webView2FigureView.Source = new Uri(viewPath);
-        }
+
 
         private void buttonSelectFiguresFolder_Click(object sender, EventArgs e)
         {
@@ -279,20 +198,117 @@ namespace FigurePreview
             DialogResult result = folderDlg.ShowDialog();
             if (result == DialogResult.OK)
             {
-                selectedPathFiguresRootFolder = folderDlg.SelectedPath;                
+                selectedPathFiguresRootFolder = folderDlg.SelectedPath;
                 DisplayFigures();
                 WatchFiguresFoldersModifications();
             }
         }
-
         private void buttonRefreshHtml_Click(object sender, EventArgs e)
         {
             ReloadHtmlView();
         }
+        #endregion
 
+        #region html view operations
+        private void CreateAndDisplayHtmlFigure(FigureItem displayItem)
+        {
+            selectedDisplayName = displayItem.Name;
+            var viewPath = htmlViewFactory.CreateHtmlViewForFile(displayItem);
+            webView2FigureView.Source = new Uri(viewPath);
+        }
+      
         private void ReloadHtmlView()
         {
             webView2FigureView.Reload();
-        }        
+        }
+
+        private void SetDefaultView()
+        {
+            string defaultView = htmlViewFactory.GetDefaultView();
+            webView2FigureView.Source = new Uri(defaultView);
+        }
+        #endregion
+
+        #region ui helper functions
+        public void ResetErrorMessage()
+        {
+            lblError.Text = "";
+            lblError.Visible = false;
+        }
+
+        public void DisplayError(string errorMessage)
+        {
+            DisableViewComponents();
+            var displayError = $"Det har skjedd en feil! {errorMessage}";
+            lblError.Visible = true;
+            lblError.Text = displayError;
+        }
+
+        public void DisableViewComponents()
+        {
+            lblFiguresRootInfo.Enabled = false;
+            listBoxDisplayItems.Enabled = false;
+            buttonRefreshHtml.Enabled = false;
+            webView2FigureView.Enabled = false;
+        }
+
+        public void EnableViewComponents()
+        {
+            lblFiguresRootInfo.Enabled = true;
+            listBoxDisplayItems.Enabled = true;
+            buttonRefreshHtml.Enabled = true;
+            webView2FigureView.Enabled = true;
+            lblError.Visible = false;
+        }
+
+        #endregion
+
+        #region init webview,  selectedPathFiguresRootFolder and factories
+        private async void PreviewToolForm_Load(object sender, EventArgs e)
+        {
+            await InitializeAsync();
+            if ((webView2FigureView == null) || (webView2FigureView.CoreWebView2 == null))
+            {
+                Debug.WriteLine("webview not ready");
+            }
+        }
+
+        private async Task InitializeAsync()
+        {
+            await webView2FigureView.EnsureCoreWebView2Async(null);
+        }
+        private void InitializeFactories()
+        {
+            figureItemFactory = new FigureItemFactory();
+            htmlViewFactory = new HtmlViewFactory();
+        }
+        private void SetInitalSelectedPathFigureRootFolder()
+        {
+            // caluclate selected path to figures
+            if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enabled)
+            {
+
+                var startPath = FigureConfiguration.Instance.FigurePreview.StartPath;
+                var dynamicPublicationPath = FigureConfiguration.Instance.FigurePreview.PublicationDynamicPath?.Text;
+                buttonSelectFiguresFolder.Enabled = false;
+                selectedPathFiguresRootFolder = $"{startPath}\\{dynamicPublicationPath}";
+
+                if (!Directory.Exists(selectedPathFiguresRootFolder))
+                {
+                    DisplayError($"Root mappe {selectedPathFiguresRootFolder} finnes ikke");
+                    return;
+                }
+            }
+            else
+            {
+                buttonSelectFiguresFolder.Enabled = true;
+
+                if (string.IsNullOrEmpty(selectedPathFiguresRootFolder))
+                {
+                    selectedPathFiguresRootFolder = FigureConfiguration.Instance.FigurePreview.StartPath;
+                }
+            }
+        }
+        #endregion
     }
 }

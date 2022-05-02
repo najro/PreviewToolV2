@@ -143,8 +143,8 @@ namespace FigurePreview.Factories
 
             sb.AppendLine($" var {jsonDataVariableName} = {jsonFileContent};");
 
-            sb.AppendLine($"{jsonDataVariableName}.title = null;");
-            sb.AppendLine($"{jsonDataVariableName}.subtitle = null;");
+            //sb.AppendLine($"{jsonDataVariableName}.title = null;");
+            //sb.AppendLine($"{jsonDataVariableName}.subtitle = null;");
 
             sb.AppendLine("document.addEventListener('DOMContentLoaded',");
             sb.AppendLine("function(){");
