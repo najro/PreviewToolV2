@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\TempPath.cs" />
     <Compile Include="Configuration\DynamicPathFile.cs" />
     <Compile Include="Configuration\Extentions.cs" />
     <Compile Include="Configuration\Figure.cs" />

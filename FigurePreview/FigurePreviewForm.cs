@@ -1,6 +1,7 @@
 ﻿using FigurePreview.Configuration;
 using FigurePreview.Factories;
 using FigurePreview.Models;
+using Microsoft.Web.WebView2.Core;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -24,16 +25,16 @@ namespace FigurePreview
         {
             InitializeComponent();
             ResetErrorMessage();
-            VerifyConfigurationAndDisplayFigures();           
+            VerifyConfigurationAndDisplayFigures(true);           
             WatchFiguresFoldersModifications();
 
             if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enabled)
             {
                 WatchDynamicPathFileModifications();
-            }
+            }            
         }
         
-        public void VerifyConfigurationAndDisplayFigures()
+        public void VerifyConfigurationAndDisplayFigures(bool loadForm = false)
         {
             if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
             {
@@ -41,14 +42,14 @@ namespace FigurePreview
                 return;
             }
 
-            InitializeFactories();
+            InitializeFactories(loadForm);
             ResetErrorMessage();
             EnableViewComponents();
             SetInitalSelectedPathFigureRootFolder();
-            DisplayFigures();
+            DisplayFigures(loadForm);
         }
           
-        private void DisplayFigures()
+        private void DisplayFigures(bool loadForm = false)
         {
             // verify that selectedPathFiguresRootFolder exists
             if (selectedPathFiguresRootFolder == null || string.IsNullOrWhiteSpace(selectedPathFiguresRootFolder) || !Directory.Exists(selectedPathFiguresRootFolder))
@@ -88,17 +89,20 @@ namespace FigurePreview
                 }
             }
 
-            // check if selected figure is already set, then try to pre selected this view
-            // this might occur when any changes of files in figure folder
-            if (selectedFigureItem != null)
+            if (!loadForm)
             {
-                listBoxDisplayItems.SelectedItem = selectedFigureItem;
-                ReloadHtmlView();
-            }
-            else
-            {
-                SetDefaultView();
-            }                        
+                // check if selected figure is already set, then try to pre selected this view
+                // this might occur when any changes of files in figure folder
+                if (selectedFigureItem != null)
+                {
+                    listBoxDisplayItems.SelectedItem = selectedFigureItem;
+                    ReloadHtmlView();
+                }
+                else
+                {
+                    SetDefaultView();
+                }
+            }            
         }
 
 
@@ -275,12 +279,27 @@ namespace FigurePreview
 
         private async Task InitializeAsync()
         {
-            await webView2FigureView.EnsureCoreWebView2Async(null);
+
+            if (FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
+            {
+                if (FigureConfiguration.Instance.FigurePreview.TempPath.Enabled)
+                {
+                    var userDataFolder = FigureConfiguration.Instance.FigurePreview.TempPath.Text;
+                    var webView2Environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+                    await webView2FigureView.EnsureCoreWebView2Async(webView2Environment);
+                }
+                else
+                {
+                    await webView2FigureView.EnsureCoreWebView2Async(null);
+                }
+
+                SetDefaultView();
+            }           
         }
-        private void InitializeFactories()
+        private void InitializeFactories(bool loadForm = false)
         {
             figureItemFactory = new FigureItemFactory();
-            htmlViewFactory = new HtmlViewFactory();
+            htmlViewFactory = new HtmlViewFactory(loadForm);
         }
         private void SetInitalSelectedPathFigureRootFolder()
         {
