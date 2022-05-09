@@ -8,7 +8,65 @@ namespace FigurePreview.Factories
 {
     public class HtmlViewFactory
     {
-        private const string HtmlViewFolder = "HtmlView";
+        private bool _useTempArea = false;
+        public HtmlViewFactory(bool loadForm = false)
+        {
+            if (FigureConfiguration.Instance.FigurePreview.TempPath.Enabled)
+            {
+                _useTempArea = true;
+                if (loadForm)
+                {
+                    CopyHtmlViewStrutureToTempArea();
+                }
+            }
+        }
+
+        private string HtmlViewFolder
+        {
+            get
+            {
+                if (_useTempArea)
+                {
+                    return HtmlViewPathTemp;
+                }
+
+                return HtmlViewPathLocal;
+            }
+        }
+
+        private string HtmlViewPathTemp
+        {
+            get
+            {
+                return $"{FigureConfiguration.Instance.FigurePreview.TempPath.Text}\\HtmlView";
+            }
+        }
+
+        private string HtmlViewPathLocal
+        {
+            get
+            {
+                return $"{Directory.GetCurrentDirectory()}\\HtmlView";
+            }
+        }
+
+        private void CopyHtmlViewStrutureToTempArea()
+        {
+            var sourcePath = HtmlViewPathLocal;
+            var targetPath = HtmlViewPathTemp; 
+
+            //Now Create all of the directories
+            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+            }
+
+            //Copy all the files & Replaces any files with the same name
+            foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+            {
+                File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            }
+        }
 
         public string CreateHtmlViewForFile(FigureItem displayFigureItem)
         {
@@ -72,25 +130,25 @@ namespace FigurePreview.Factories
 
         public string GetDefaultView()
         {
-            string defaultView = Directory.GetCurrentDirectory() + $"\\htmlview\\view\\default.htm";
+            string defaultView = $"{HtmlViewFolder}\\view\\default.htm";
             return defaultView;
         }
 
         private string GetTemplateFilePath()
         {
-            var templateFilePath = Directory.GetCurrentDirectory() + $"\\{HtmlViewFolder}\\template\\view-template.htm";
+            var templateFilePath = $"{HtmlViewFolder}\\template\\view-template.htm";
             return templateFilePath;
         }
 
         private string GetViewFilePath(string fileName)
         {
-            var viewPath = Directory.GetCurrentDirectory() + $"\\{HtmlViewFolder}\\View\\{fileName}.htm";
+            var viewPath = $"{HtmlViewFolder}\\View\\{fileName}.htm";
             return viewPath;
         }
 
         private string GetViewDirectoryPath()
         {
-            var viewPath = Directory.GetCurrentDirectory() + $"\\{HtmlViewFolder}\\View";
+            var viewPath = $"{HtmlViewFolder}\\View";
             return viewPath;
         }
 

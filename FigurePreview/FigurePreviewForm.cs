@@ -24,7 +24,7 @@ namespace FigurePreview
         {
             InitializeComponent();
             ResetErrorMessage();
-            VerifyConfigurationAndDisplayFigures();           
+            VerifyConfigurationAndDisplayFigures(true);           
             WatchFiguresFoldersModifications();
 
             if (FigureConfiguration.Instance.FigurePreview.DynamicPathFile.Enabled)
@@ -33,7 +33,7 @@ namespace FigurePreview
             }
         }
         
-        public void VerifyConfigurationAndDisplayFigures()
+        public void VerifyConfigurationAndDisplayFigures(bool loadForm = false)
         {
             if (!FigureConfiguration.Instance.IsConfigurationValid(out string errorMessage))
             {
@@ -41,7 +41,7 @@ namespace FigurePreview
                 return;
             }
 
-            InitializeFactories();
+            InitializeFactories(loadForm);
             ResetErrorMessage();
             EnableViewComponents();
             SetInitalSelectedPathFigureRootFolder();
@@ -277,10 +277,10 @@ namespace FigurePreview
         {
             await webView2FigureView.EnsureCoreWebView2Async(null);
         }
-        private void InitializeFactories()
+        private void InitializeFactories(bool loadForm = false)
         {
             figureItemFactory = new FigureItemFactory();
-            htmlViewFactory = new HtmlViewFactory();
+            htmlViewFactory = new HtmlViewFactory(loadForm);
         }
         private void SetInitalSelectedPathFigureRootFolder()
         {

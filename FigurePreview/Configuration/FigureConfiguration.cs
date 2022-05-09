@@ -140,6 +140,29 @@ namespace FigurePreview.Configuration
                 }
             }
 
+            if (FigurePreview?.TempPath == null)
+            {
+                error.Append($"TempPath er tom i XML ({FigureConfigurationFile})");
+            }
+            else
+            {
+                if (FigurePreview.TempPath.Enabled)
+                {
+                    if (string.IsNullOrEmpty(FigurePreview.TempPath.Text))
+                    {
+                        error.Append($"Det savnes informasjon i TempPath XML ({FigureConfigurationFile})");
+                    }
+                    else
+                    {
+                        if (!Directory.Exists(FigurePreview.TempPath.Text))
+                        {
+                            error.Append($"Temp mappe {FigurePreview.TempPath.Text} finnes ikke");
+                        }
+                    }                    
+                }
+            }
+
+
             if (FigurePreview?.Figure == null || !FigurePreview.Figure.Any())
             {
                 error.Append($"Det savnes Figure elementer i XML ({FigureConfigurationFile})");
