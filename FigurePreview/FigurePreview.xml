@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FigurePreview startpath="C:\Users\ÖrjanAndersson\Documents\Lager\Lager">
 	<DynamicPathFile enable="true">C:\Users\ÖrjanAndersson\Documents\Lager\Lager\PublicationDynamicPath.xml</DynamicPathFile>
-  <TempPath enable="true">C:\tmp</TempPath>
+  <TempPath enable="false">C:\tmp\figur</TempPath>
 	<PathRoule>{startpath}{dynamicpath}{FormatPath}</PathRoule>
 	<Figure>
 		<Name>Kjerneformat statiske</Name>

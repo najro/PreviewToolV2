@@ -279,18 +279,22 @@ namespace FigurePreview
 
         private async Task InitializeAsync()
         {
-            if (FigureConfiguration.Instance.FigurePreview.TempPath.Enabled)
-            {
-                var userDataFolder = FigureConfiguration.Instance.FigurePreview.TempPath.Text;
-                var webView2Environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
-                await webView2FigureView.EnsureCoreWebView2Async(webView2Environment);
-            }
-            else
-            {
-                await webView2FigureView.EnsureCoreWebView2Async(null);
-            }
 
-            SetDefaultView();
+            if (FigureConfiguration.Instance.IsConfigurationValid(out var errorMessage))
+            {
+                if (FigureConfiguration.Instance.FigurePreview.TempPath.Enabled)
+                {
+                    var userDataFolder = FigureConfiguration.Instance.FigurePreview.TempPath.Text;
+                    var webView2Environment = await CoreWebView2Environment.CreateAsync(null, userDataFolder);
+                    await webView2FigureView.EnsureCoreWebView2Async(webView2Environment);
+                }
+                else
+                {
+                    await webView2FigureView.EnsureCoreWebView2Async(null);
+                }
+
+                SetDefaultView();
+            }           
         }
         private void InitializeFactories(bool loadForm = false)
         {

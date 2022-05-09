@@ -53,7 +53,10 @@ namespace FigurePreview.Factories
         private void CopyHtmlViewStrutureToTempArea()
         {
             var sourcePath = HtmlViewPathLocal;
-            var targetPath = HtmlViewPathTemp; 
+            var targetPath = HtmlViewPathTemp;
+
+            if (!Directory.Exists(sourcePath))
+                return;
 
             //Now Create all of the directories
             foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
