@@ -54,7 +54,7 @@ namespace FigurePreview.Models
         {
             var hasExtensions = _figureInfoList.Any(x =>
                 x.AllowedExtension == true && x.FigureFormatPath == currentFigureEntry.FormatPath &&
-                x.FileExtension == extension);
+                x.FileExtension.ToLower() == extension.ToLower());
 
             return hasExtensions;
         }
@@ -63,7 +63,7 @@ namespace FigurePreview.Models
         {
             var figureInfo = _figureInfoList.Where(x =>
                 x.AllowedExtension == true && x.FigureFormatPath == currentFigureEntry.FormatPath &&
-                x.FileExtension == extension).First();
+                x.FileExtension.ToLower() == extension.ToLower()).First();
 
             return figureInfo;
         }

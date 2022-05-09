@@ -45,7 +45,7 @@ namespace FigurePreview.Factories
                     {
 
                         var figureInfo = displayFigureItem.GetFigureInfoForExtension(figure, ext);
-                        htmlContent.Append($"<div class=\"ext-header\">{figureInfo.FileName}.{ext}</div>");
+                        htmlContent.Append($"<div class=\"ext-header\">{figureInfo.FileName}.{ext.ToLower()}</div>");
                         htmlContent.Append($"<div class=\"ext-content\">{BuildFigureContentBasedOnExtension(figureInfo)}</div>");
                     }
                 }
@@ -111,7 +111,7 @@ namespace FigurePreview.Factories
                     sb.AppendLine(BuildJsonContent(figureInfo));
                     break;
                 default:
-                    sb.Append($"Savner visning for {figureInfo.FileExtension}");
+                    sb.Append($"Savner visning for {figureInfo.FileExtension.ToLower()}");
                     break;
 
             }
