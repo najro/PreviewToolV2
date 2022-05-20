@@ -27,7 +27,7 @@ namespace FigurePreview.Factories
                 }
 
                 // read all files from preview folder to build up unique list of file names
-                var files = Directory.GetFiles(filesToPreviewFolder, "*.*", SearchOption.AllDirectories);
+                var files = Directory.GetFiles(filesToPreviewFolder, "*.*", SearchOption.TopDirectoryOnly);
 
                 foreach (var file in files)
                 {
