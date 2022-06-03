@@ -1,5 +1,6 @@
 ﻿using FigurePreview.Configuration;
 using FigurePreview.Models;
+using FigurePreview.Utils.Comparer;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -63,7 +64,9 @@ namespace FigurePreview.Factories
                 }
             }
 
-            return figureItems.OrderBy(o => o.Name).ToList();
+            //return figureItems.OrderBy(o => o.Name).ToList();
+            var figurNameComparer = new FigureNameComparer();
+            return figureItems.OrderBy(o => o.Name, figurNameComparer).ToList();
         }
     }
 }
