@@ -8,3 +8,13 @@
 	- https://docs.microsoft.com/en-us/microsoft-edge/webview2/
 	- https://docs.microsoft.com/en-us/microsoft-edge/webview2/how-to/machine-setup
 	- https://developer.microsoft.com/en-us/microsoft-edge/webview2/
+
+
+```mermaid
+flowchart TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]
+```
